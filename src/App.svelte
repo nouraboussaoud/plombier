@@ -175,6 +175,21 @@
   background-color: #1f2937 !important;
   min-height: 300px !important;
 }
+@keyframes wave {
+    0% {
+      transform: translateY(10px);
+    }
+    50% {
+      transform: translateY(-30px);
+    }
+    100% {
+      transform: translateY(10px);
+    }
+  }
+
+  .animate-wave {
+    animation: wave 3s ease-in-out infinite;
+  }
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -203,69 +218,72 @@
 {#if $currentRoute === '/'}
   <div class="min-h-screen bg-white">
     <!-- Header -->
-    <header class="relative bg-white sticky top-0 z-40 backdrop-blur-sm bg-white/95">
-      <!-- Decorative hexagonal pattern -->
-      <div class="absolute top-0 right-0 w-full h-32 overflow-hidden">
-        <div class="absolute top-0 right-0 flex">
-          <!-- Blue to orange hexagonal dots -->
-          <div class="flex flex-wrap gap-1 transform rotate-12 translate-x-32 -translate-y-8">
-            {#each Array(15) as _, i}
-              <div class="flex gap-1">
-                {#each Array(20) as _, j}
-                  <div 
-                    class="w-3 h-3 rounded-full transition-colors duration-300"
-                    class:bg-blue-400={j < 10}
-                    class:bg-orange-500={j >= 10}
-                  ></div>
-                {/each}
-              </div>
-            {/each}
+    <header class="relative bg-white sticky top-0 z-40 backdrop-blur-sm">
+  <!-- Decorative wave pattern -->
+  <div class="absolute top-0 right-0 w-full h-32 overflow-hidden max-sm:hidden">
+    <div class="absolute top-0 right-0 w-full h-full transform rotate-12 translate-x-32 -translate-y-8">
+      <!-- Wave background with gradient -->
+      <svg class="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none">
+        <path
+          d="M0,0 C300,50 600,150 900,50 C1100,0 1200,100 1200,200 V400 H0 Z"
+          fill="url(#waveGradient)"
+          class="animate-wave"
+        />
+        <defs>
+          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color: rgba(59, 130, 246, 0.3);" />
+            <stop offset="50%" style="stop-color: rgba(59, 130, 246, 0.2);" />
+            <stop offset="100%" style="stop-color: rgba(249, 115, 22, 0.3);" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <!-- Diagonal text elements -->
+    <div class="absolute top-4 right-20 transform rotate-12 text-gray-600 text-sm font-semibold">
+      <div class="mb-2">INSTALLATION</div>
+      <div class="mb-2">ENTRETIEN</div>
+      <div>DÉPANNAGE</div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <!-- Logo and company info -->
+      <div class="flex items-center space-x-7">
+        <div class="relative">
+          <!-- Water drop logo -->
+          <div class="w-16 h-20 relative">
+            <div class="absolute inset-0 w-full h-full flex items-center justify-center">
+              <img src="logo.png" alt="FRD Services Logo" />
+            </div>
           </div>
         </div>
-        
-        <!-- Diagonal text elements -->
-        <div class="absolute top-4 right-20 transform rotate-12 text-gray-600 text-sm font-semibold">
-          <div class="mb-2">INSTALLATION</div>
-          <div class="mb-2">ENTRETIEN</div>
-          <div>DÉPANNAGE</div>
+        <div>
+          <h1 class="text-2xl font-bold text-blue-600">FRD Services</h1>
+          <p class="text-sm text-gray-600">Plomberie Chauffage</p>
+          <p class="text-sm text-gray-600">Climatisation</p>
+        </div>
+        <div class="hidden md:block ml-8">
+          <p class="text-lg font-semibold text-gray-800">Spécialiste du dépannage urgent</p>
         </div>
       </div>
 
-      <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-          <!-- Logo and company info -->
-          <div class="flex items-center space-x-4">
-            <div class="relative">
-              <!-- Water drop logo -->
-              <div class="w-16 h-20 relative">
-                <div class="absolute inset-0">
-                  <img src="logo.png" alt="">
-                </div>
-              </div>
-            </div>
-            <div>
-              <h1 class="text-2xl font-bold text-blue-600">FRD Services</h1>
-              <p class="text-sm text-gray-600">Plomberie Chauffage</p>
-              <p class="text-sm text-gray-600">Climatisation</p>
-            </div>
-            <div class="hidden md:block ml-8">
-              <p class="text-lg font-semibold text-gray-800">Spécialiste du dépannage urgent</p>
-            </div>
-          </div>
-
-          <!-- User and cart icons -->
-          <div class="flex items-center space-x-4">
-            <button class="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-              <User size={24} />
-            </button>
-            <button class="relative p-2 text-gray-600 hover:text-orange-500 transition-colors">
-              <ShoppingCart size={24} />
-              <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-            </button>
-          </div>
-        </div>
+      <!-- User and cart icons (commented out as per your code) -->
+      <!-- 
+      <div class="flex items-center space-x-4">
+        <button class="p-2 text-gray-600 hover:text-blue-600 transition-colors">
+          <User size={24} />
+        </button>
+        <button class="relative p-2 text-gray-600 hover:text-orange-500 transition-colors">
+          <ShoppingCart size={24} />
+          <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        </button>
       </div>
-    </header>
+      -->
+    </div>
+  </div>
+</header>
 
     <!-- Navigation -->
     <nav class="bg-gray-50 border-t border-gray-200 sticky top-24 z-30 backdrop-blur-sm bg-gray-50/95">
@@ -291,7 +309,7 @@
       <!-- Kitchen background image with parallax -->
       <div class="absolute inset-0 parallax-bg" style="--scroll: {scrollY}">
         <img 
-          src="/placeholder.svg?height=600&width=800" 
+          src="/Plumbing.jpg" 
           alt="Modern kitchen with boiler installation"
           class="w-full h-full object-cover"
         />
