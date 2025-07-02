@@ -1,505 +1,583 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-
-    // State management with runes
-    let currentSection = $state('accueil');
-    let menuOpen = $state(false);
-    let selectedService = $state('');
-
-    const services = [
-        {
-            id: 'fuite',
-            nom: 'Réparation de fuites',
-            description: 'Détection et réparation de fuites d\'eau',
-            prix: 'À partir de 80€',
-            icon: '💧',
-            urgence: true
-        },
-        {
-            id: 'debouchage',
-            nom: 'Débouchage canalisations',
-            description: 'Débouchage WC, évier, douche',
-            prix: 'À partir de 120€',
-            icon: '🔧',
-            urgence: true
-        },
-        {
-            id: 'chauffage',
-            nom: 'Installation chauffage',
-            description: 'Installation et maintenance chauffage',
-            prix: 'Devis gratuit',
-            icon: '🔥',
-            urgence: false
-        },
-        {
-            id: 'sanitaire',
-            nom: 'Installation sanitaire',
-            description: 'WC, lavabo, douche, baignoire',
-            prix: 'Devis gratuit',
-            icon: '🚿',
-            urgence: false
+  import { User, ShoppingCart, Phone, Mail, MapPin, Calendar } from 'lucide-svelte';
+  import { onMount } from 'svelte';
+  import { currentRoute, initRouter, navigate } from './lib/router.js';
+  
+  // Import components
+  import RdvStep1 from './components/RdvStep1.svelte';
+  import RdvStep2 from './components/RdvStep2.svelte';
+  import RdvStep3 from './components/RdvStep3.svelte';
+  
+  let selectedService = $state<typeof services[keyof typeof services] | null>(null);
+  let isModalOpen = $state(false);
+  let scrollY = $state(0);
+  
+  // Scroll animations
+  let heroRef = $state();
+  let servicesRef = $state();
+  let contentRef = $state();
+  
+  onMount(() => {
+    initRouter();
+    
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in-up');
         }
-    ];
-
-    // Form data
-    let formData = $state({
-        nom: '',
-        telephone: '',
-        email: '',
-        adresse: '',
-        description: '',
-        urgence: false
+      });
+    }, observerOptions);
+    
+    // Observe elements for animation
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
     });
+    
+    // Scroll listener for parallax effects
+    const handleScroll = () => {
+      scrollY = window.scrollY;
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
 
-    // Event handlers
-    function handleQuickQuote(event: Event) {
-        event.preventDefault();
-        alert('Merci pour votre demande ! Nous vous contactons dans les plus brefs délais.');
+  const services = {
+    plomberie: {
+      title: "PLOMBERIE",
+      subtitle: "Dépannage urgent, installation et rénovation",
+      description: "Service de plomberie complet disponible 24h/24 et 7j/7. Nos plombiers interviennent rapidement pour tous vos problèmes de plomberie urgents.",
+      features: [
+        "Dépannage urgent 24h/24",
+        "Réparation de fuites",
+        "Installation sanitaire complète",
+        "Rénovation de salle de bain",
+        "Débouchage d'urgence"
+      ],
+      certifications: []
+    },
+    debouchage: {
+      title: "DÉBOUCHAGE CANALISATIONS",
+      subtitle: "Débouchage canalisations 7J/7",
+      description: "Service de débouchage professionnel disponible 7 jours sur 7. Nous utilisons des équipements haute pression pour un débouchage efficace.",
+      features: [
+        "Débouchage haute pression",
+        "Curage de canalisations",
+        "Inspection vidéo",
+        "Travaux d'assainissement",
+        "Intervention d'urgence 7j/7"
+      ],
+      certifications: []
+    },
+    chauffage: {
+      title: "CHAUFFAGE",
+      subtitle: "La solution chauffage adaptée à votre logement",
+      description: "Spécialistes en chauffage, nous proposons des solutions adaptées à chaque logement. Installation, entretien et dépannage de tous types d'équipements.",
+      features: [
+        "Installation de chaudières",
+        "Entretien annuel obligatoire",
+        "Dépannage d'urgence",
+        "Radiateurs et plancher chauffant",
+        "Conseil en économie d'énergie"
+      ],
+      certifications: ["RGE Chauffage +", "PG"]
+    },
+    ballon: {
+      title: "BALLON/CHAUFFE-EAU",
+      subtitle: "Un grand choix de chauffe-eau et ballon d'eau chaude",
+      description: "Large gamme de chauffe-eau et ballons d'eau chaude en stock. Installation, dépannage et entretien par nos techniciens certifiés.",
+      features: [
+        "Chauffe-eau électrique",
+        "Chauffe-eau thermodynamique",
+        "Ballon d'eau chaude",
+        "Dépannage et entretien",
+        "Stock permanent des grandes marques"
+      ],
+      certifications: ["RGE"]
+    },
+    chaudiere: {
+      title: "CHAUDIÈRE GAZ",
+      subtitle: "Entretien, dépannage et remplacement",
+      description: "Spécialistes des chaudières gaz, nous assurons l'entretien, le dépannage et le remplacement de votre ancienne chaudière par une chaudière gaz moderne.",
+      features: [
+        "Entretien annuel chaudière gaz",
+        "Dépannage d'urgence",
+        "Remplacement chaudière",
+        "Chaudières gaz condensation",
+        "Conseil en économie d'énergie"
+      ],
+      certifications: ["RGE", "PG"]
+    },
+    pompe: {
+      title: "POMPE À CHALEUR/CLIMATISATION",
+      subtitle: "La solution climatisation pour rafraîchir votre habitation",
+      description: "Installation et entretien de pompes à chaleur air/air et air/eau. Solutions de climatisation pour un confort optimal toute l'année.",
+      features: [
+        "Pompe à chaleur air/air",
+        "Pompe à chaleur air/eau",
+        "Climatisation réversible",
+        "Entretien et maintenance",
+        "Conseil en efficacité énergétique"
+      ],
+      certifications: ["RGE", "QUALIPAC"]
     }
+  };
 
-    function handleContactForm(event: Event) {
-        event.preventDefault();
-        alert('Votre demande a été envoyée avec succès ! Nous vous recontactons rapidement.');
+  const navItems = [
+    { label: 'PLOMBERIE', key: 'plomberie' },
+    { label: 'DÉBOUCHAGE CANALISATIONS', key: 'debouchage' },
+    { label: 'CHAUFFAGE', key: 'chauffage' },
+    { label: 'BALLON/CHAUFFE-EAU', key: 'ballon' },
+    { label: 'RDV INTERVENTION & DEVIS', key: 'rdv' },
+    { label: 'CHAUDIÈRE GAZ', key: 'chaudiere' },
+    { label: 'POMPE À CHALEUR/CLIMATISATION', key: 'pompe' },
+    { label: 'VOS PROJETS', key: 'projets' },
+    { label: 'FRD Services', key: 'about' }
+  ];
+
+  function handleNavClick(key: string) {
+    if (key === 'rdv') {
+      navigate('/rdv');
+    } else if (key in services) {
+      openServiceModal(key);
     }
+  }
 
+  function openServiceModal(serviceKey: string) {
+    if (serviceKey in services) {
+      selectedService = services[serviceKey as keyof typeof services];
+      isModalOpen = true;
+    }
+  }
 
+  function closeModal() {
+    isModalOpen = false;
+    selectedService = null;
+  }
 </script>
 
+<svelte:window bind:scrollY />
+
 <style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    footer {
+  position: relative !important;
+  z-index: 1000 !important;
+  background-color: #1f2937 !important;
+  min-height: 300px !important;
+}
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
     }
-    @keyframes slideUp {
-        from { transform: translateY(50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-    }
-    @keyframes pulseGlow {
-        from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.3); }
-    }
-    .glass-effect {
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .gradient-text {
-        background: linear-gradient(135deg, #3b82f6, #06b6d4);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
+  }
+  
+  .animate-fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  
+  .animate-on-scroll {
+    opacity: 1 !important;
+  transform: translateY(0) !important;
+  }
+  
+  .parallax-bg {
+    transform: translateY(calc(var(--scroll) * 0.5px));
+  }
 </style>
 
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+{#if $currentRoute === '/'}
+  <div class="min-h-screen bg-white">
     <!-- Header -->
-    <header class="fixed top-0 w-full z-50 glass-effect border-b border-white/20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center animate-fade-in">
-                    <div class="text-2xl font-bold gradient-text">🔧 PlombiPro</div>
+    <header class="relative bg-white sticky top-0 z-40 backdrop-blur-sm bg-white/95">
+      <!-- Decorative hexagonal pattern -->
+      <div class="absolute top-0 right-0 w-full h-32 overflow-hidden">
+        <div class="absolute top-0 right-0 flex">
+          <!-- Blue to orange hexagonal dots -->
+          <div class="flex flex-wrap gap-1 transform rotate-12 translate-x-32 -translate-y-8">
+            {#each Array(15) as _, i}
+              <div class="flex gap-1">
+                {#each Array(20) as _, j}
+                  <div 
+                    class="w-3 h-3 rounded-full transition-colors duration-300"
+                    class:bg-blue-400={j < 10}
+                    class:bg-orange-500={j >= 10}
+                  ></div>
+                {/each}
+              </div>
+            {/each}
+          </div>
+        </div>
+        
+        <!-- Diagonal text elements -->
+        <div class="absolute top-4 right-20 transform rotate-12 text-gray-600 text-sm font-semibold">
+          <div class="mb-2">INSTALLATION</div>
+          <div class="mb-2">ENTRETIEN</div>
+          <div>DÉPANNAGE</div>
+        </div>
+      </div>
+
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo and company info -->
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <!-- Water drop logo -->
+              <div class="w-16 h-20 relative">
+                <div class="absolute inset-0">
+                  <img src="logo.png" alt="">
                 </div>
-                
-                <!-- Desktop Menu -->
-                <nav class="hidden md:flex space-x-8">
-                    <button onclick={() => currentSection = 'accueil'} 
-                            class="text-gray-700 hover:text-blue-500 transition-colors duration-300 font-medium">
-                        Accueil
-                    </button>
-                    <button onclick={() => currentSection = 'services'} 
-                            class="text-gray-700 hover:text-blue-500 transition-colors duration-300 font-medium">
-                        Services
-                    </button>
-                    <button onclick={() => currentSection = 'urgence'} 
-                            class="text-gray-700 hover:text-blue-500 transition-colors duration-300 font-medium">
-                        Urgence 24h/7j
-                    </button>
-                    <button onclick={() => currentSection = 'contact'} 
-                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 animate-pulse-glow">
-                        Contact
-                    </button>
-                </nav>
-
-                <!-- Mobile Menu Button -->
-                <button onclick={() => menuOpen = !menuOpen} class="md:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+              </div>
             </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        {#if menuOpen}
-        <div class="md:hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 glass-effect">
-                <button onclick={() => { currentSection = 'accueil'; menuOpen = false; }} 
-                        class="block px-3 py-2 text-gray-700 hover:text-blue-500">Accueil</button>
-                <button onclick={() => { currentSection = 'services'; menuOpen = false; }} 
-                        class="block px-3 py-2 text-gray-700 hover:text-blue-500">Services</button>
-                <button onclick={() => { currentSection = 'urgence'; menuOpen = false; }} 
-                        class="block px-3 py-2 text-gray-700 hover:text-blue-500">Urgence 24h/7j</button>
-                <button onclick={() => { currentSection = 'contact'; menuOpen = false; }} 
-                        class="block px-3 py-2 text-gray-700 hover:text-blue-500">Contact</button>
+            <div>
+              <h1 class="text-2xl font-bold text-blue-600">FRD Services</h1>
+              <p class="text-sm text-gray-600">Plomberie Chauffage</p>
+              <p class="text-sm text-gray-600">Climatisation</p>
             </div>
+            <div class="hidden md:block ml-8">
+              <p class="text-lg font-semibold text-gray-800">Spécialiste du dépannage urgent</p>
+            </div>
+          </div>
+
+          <!-- User and cart icons -->
+          <div class="flex items-center space-x-4">
+            <button class="p-2 text-gray-600 hover:text-blue-600 transition-colors">
+              <User size={24} />
+            </button>
+            <button class="relative p-2 text-gray-600 hover:text-orange-500 transition-colors">
+              <ShoppingCart size={24} />
+              <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+            </button>
+          </div>
         </div>
-        {/if}
+      </div>
     </header>
-    
-    <!-- Main Content -->
-    <main>
-        {#if currentSection === 'accueil'}
-        <section class="pt-24 pb-16 px-4">
-            <div class="max-w-7xl mx-auto">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="animate-slide-up">
-                        <h1 class="text-5xl lg:text-6xl font-bold mb-6">
-                            <span class="gradient-text">Plomberie</span> & 
-                            <span class="text-orange-500">Chauffage</span>
-                        </h1>
-                        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                            Service d'intervention rapide et professionnel. 
-                            Dépannage 24h/7j dans toute l'Île-de-France.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                            <button onclick={() => currentSection = 'urgence'} 
-                                    class="bg-red-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-600 transform hover:scale-105 transition-all duration-300 animate-pulse-glow">
-                                🚨 Urgence 24h/7j
-                            </button>
-                            <button onclick={() => currentSection = 'services'} 
-                                    class="bg-blue-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition-all duration-300">
-                                Voir nos services
-                            </button>
-                        </div>
 
-                        <div class="grid grid-cols-3 gap-6 text-center">
-                            <div class="animate-float">
-                                <div class="text-3xl font-bold text-blue-500">+500</div>
-                                <div class="text-gray-600">Interventions</div>
-                            </div>
-                            <div class="animate-float" style="animation-delay: 0.5s">
-                                <div class="text-3xl font-bold text-orange-500">24h/7j</div>
-                                <div class="text-gray-600">Disponibilité</div>
-                            </div>
-                            <div class="animate-float" style="animation-delay: 1s">
-                                <div class="text-3xl font-bold text-cyan-500">98%</div>
-                                <div class="text-gray-600">Satisfaction</div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Navigation -->
+    <nav class="bg-gray-50 border-t border-gray-200 sticky top-24 z-30 backdrop-blur-sm bg-gray-50/95">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-wrap justify-center space-x-1 py-3">
+          {#each navItems as item}
+            <button 
+              onclick={() => handleNavClick(item.key)}
+              class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-white rounded transition-all duration-300 whitespace-nowrap transform hover:scale-105"
+              class:bg-orange-100={item.key === 'rdv'}
+              class:text-orange-600={item.key === 'rdv'}
+              class:shadow-md={item.key === 'rdv'}
+            >
+              {item.label}
+            </button>
+          {/each}
+        </div>
+      </div>
+    </nav>
 
-                    <div class="relative animate-fade-in">
-                        <div class="glass-effect rounded-3xl p-8 transform hover:scale-105 transition-all duration-500">
-                            <h3 class="text-2xl font-bold mb-6 text-center gradient-text">Devis Gratuit en Ligne</h3>
-                            <form class="space-y-4" onsubmit={handleQuickQuote}>
-                                <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="">Sélectionnez votre besoin</option>
-                                    {#each services as service}
-                                    <option value={service.id}>{service.nom}</option>
-                                    {/each}
-                                </select>
-                                <input type="text" placeholder="Votre nom" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <input type="tel" placeholder="Téléphone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <textarea placeholder="Décrivez votre problème..." class="w-full p-3 border border-gray-300 rounded-lg h-24 focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-                                    Obtenir mon devis gratuit
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+    <!-- Hero Section -->
+    <section bind:this={heroRef} class="relative min-h-[600px] overflow-hidden">
+      <!-- Kitchen background image with parallax -->
+      <div class="absolute inset-0 parallax-bg" style="--scroll: {scrollY}">
+        <img 
+          src="/placeholder.svg?height=600&width=800" 
+          alt="Modern kitchen with boiler installation"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <!-- Blue geometric overlay -->
+      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-blue-500/40">
+        <!-- Hexagonal pattern overlay -->
+        <div class="absolute right-0 top-0 w-2/3 h-full">
+          <div class="relative w-full h-full">
+            <!-- Large hexagonal shape -->
+            <div class="absolute right-0 top-1/4 w-96 h-96 bg-white/90 transform rotate-45 rounded-3xl animate-pulse"></div>
+            
+            <!-- Hexagonal dots pattern -->
+            <div class="absolute right-20 top-20 grid grid-cols-8 gap-2 opacity-30">
+              {#each Array(64) as _, i}
+                <div class="w-4 h-4 bg-blue-300 rounded-full animate-pulse" style="animation-delay: {i * 0.1}s"></div>
+              {/each}
             </div>
-        </section>
-        {/if}
+          </div>
+        </div>
+      </div>
 
-        {#if currentSection === 'services'}
-        <section class="py-16 px-4">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-12 animate-fade-in">
-                    <h2 class="text-4xl font-bold mb-4 gradient-text">Nos Services</h2>
-                    <p class="text-xl text-gray-600">Solutions complètes de plomberie et chauffage</p>
-                </div>
+      <!-- Action buttons -->
+      <div class="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-4">
+        <button class="w-16 h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl">
+          <Phone size={24} />
+        </button>
+        <button class="w-16 h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl">
+          <Mail size={24} />
+        </button>
+        <button onclick={() => navigate('/rdv')} class="w-16 h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl">
+          <Calendar size={24} />
+        </button>
+      </div>
+    </section>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {#each services as service, index}
-                    <div class="glass-effect rounded-2xl p-6 text-center transform hover:scale-105 transition-all duration-500 animate-slide-up" style="animation-delay: {index * 0.1}s">
-                        <div class="text-4xl mb-4 animate-float" style="animation-delay: {index * 0.2}s">{service.icon}</div>
-                        <h3 class="text-xl font-bold mb-3 text-gray-800">{service.nom}</h3>
-                        <p class="text-gray-600 mb-4">{service.description}</p>
-                        <div class="text-lg font-semibold text-blue-500 mb-4">{service.prix}</div>
-                        {#if service.urgence}
-                        <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">Urgence</span>
-                        {/if}
-                        <button onclick={() => { selectedService = service.id; currentSection = 'contact'; }} 
-                                class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                            Demander un devis
-                        </button>
-                    </div>
-                    {/each}
-                </div>
+    <!-- Content Section -->
+    <section bind:this={contentRef} class="py-16 bg-white animate-on-scroll">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
+            FRD Services Plomberie Chauffage, Spécialiste du dépannage urgent
+          </h2>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            <strong>FRD Services PLOMBERIE CHAUFFAGE</strong> est spécialiste du dépannage urgent. Nous intervenons pour des interventions urgentes en 
+            plomberie et chauffage sur toute l'Île-de-France mais également sur Orléans (Loiret 45), Tours (Indre-et-Loire 37) et Caen 
+            (Calvados 14). Nous couvrons également les travaux d'entretien, d'installation de vos appareils sanitaires et équipement de 
+            chauffage et climatisation.
+          </p>
+        </div>
+      </div>
+    </section>
 
-                <div class="mt-16 text-center">
-                    <div class="glass-effect rounded-3xl p-8 max-w-4xl mx-auto">
-                        <h3 class="text-2xl font-bold mb-6 gradient-text">Pourquoi choisir PlombiPro ?</h3>
-                        <div class="grid md:grid-cols-3 gap-8 Knutson">
-                            <div class="animate-fade-in">
-                                <div class="text-3xl mb-3">⚡</div>
-                                <h4 class="font-semibold mb-2">Intervention Rapide</h4>
-                                <p class="text-gray-600">Délai d'intervention moyen de 30 minutes en urgence</p>
-                            </div>
-                            <div class="animate-fade-in" style="animation-delay: 0.2s">
-                                <div class="text-3xl mb-3">✅</div>
-                                <h4 class="font-semibold mb-2">Garantie Qualité</h4>
-                                <p class="text-gray-600">Travaux garantis 2 ans, artisans certifiés RGE</p>
-                            </div>
-                            <div class="animate-fade-in" style="animation-delay: 0.4s">
-                                <div class="text-3xl mb-3">💰</div>
-                                <h4 class="font-semibold mb-2">Tarifs Transparents</h4>
-                                <p class="text-gray-600">Devis gratuit, prix fixe, pas de surprise</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Services Grid -->
+    <section bind:this={servicesRef} class="py-16 bg-gray-50 animate-on-scroll">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Nos Services</h2>
+        
+        <!-- Main Services Grid -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-8">
+          
+          <!-- PLOMBERIE -->
+          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+            <div class="flex items-start mb-6">
+              <div class="w-16 h-16 bg-blue-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-white rounded"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">PLOMBERIE</h3>
+                <p class="text-gray-600 mb-4">Dépannage urgent, installation et rénovation de plomberie</p>
+                <button onclick={() => openServiceModal('plomberie')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                  En savoir +
+                </button>
+              </div>
             </div>
-        </section>
-        {/if}
+          </div>
 
-        {#if currentSection === 'urgence'}
-        <section class="py-16 px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-3xl p-12 animate-pulse-glow">
-                    <div class="text-6xl mb-6 animate-float">🚨</div>
-                    <h2 class="text-4xl font-bold mb-6">Urgence Plomberie 24h/7j</h2>
-                    <p class="text-xl mb-8">Fuite d'eau, canalisation bouchée, panne de chauffage ?<br>Nous intervenons en moins de 30 minutes !</p>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                        <a href="tel:0123456789" class="bg-white text-red-500 px-8 py-4 rounded-xl font-bold text-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-300">
-                            📞 01 23 45 67 89
-                        </a>
-                        <button onclick={() => currentSection = 'contact'} 
-                                class="bg-yellow-400 text-red-500 px-8 py-4 rounded-xl font-bold hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300">
-                            Demande d'intervention
-                        </button>
-                    </div>
-
-                    <div class="grid md:grid-cols-3 gap-6 text-center">
-                        <div class="bg-white/20 rounded-xl p-4">
-                            <div class="text-2xl mb-2">⏰</div>
-                            <div class="font-semibold">Intervention</div>
-                            <div> 30 minutes</div>
-                        </div>
-                        <div class="bg-white/20 rounded-xl p-4">
-                            <div class="text-2xl mb-2">🛠️</div>
-                            <div class="font-semibold">Matériel</div>
-                            <div>Toujours disponible</div>
-                        </div>
-                        <div class="bg-white/20 rounded-xl p-4">
-                            <div class="text-2xl mb-2">🎯</div>
-                            <div class="font-semibold">Zone</div>
-                            <div>Île-de-France</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-12 grid md:grid-cols-2 gap-8">
-                    <div class="glass-effect rounded-2xl p-6">
-                        <h3 class="text-xl font-bold mb-4 text-red-500">Situations d'urgence</h3>
-                        <ul class="text-left space-y-2">
-                            <li class="flex items-center"><span class="text-red-500 mr-2">•</span> Fuite d'eau importante</li>
-                            <li class="flex items-center"><span class="text-red-500 mr-2">•</span> Canalisation complètement bouchée</li>
-                            <li class="flex items-center"><span class="text-red-500 mr-2">•</span> Panne totale de chauffage</li>
-                            <li class="flex items-center"><span class="text-red-500 mr-2">•</span> WC hors service</li>
-                            <li class="flex items-center"><span class="text-red-500 mr-2">•</span> Chauffe-eau en panne</li>
-                        </ul>
-                    </div>
-                    <div class="glass-effect rounded-2xl p-6">
-                        <h3 class="text-xl font-bold mb-4 text-blue-500">Notre engagement</h3>
-                        <ul class="text-left space-y-2">
-                            <li class="flex items-center"><span class="text-blue-500 mr-2">•</span> Devis gratuit même en urgence</li>
-                            <li class="flex items-center"><span class="text-blue-500 mr-2">•</span> Tarif transparent, pas de surprise</li>
-                            <li class="flex items-center"><span class="text-blue-500 mr-2">•</span> Travaux garantis</li>
-                            <li class="flex items-center"><span class="text-blue-500 mr-2">•</span> Paiement facilité</li>
-                            <li class="flex items-center"><span class="text-blue-500 mr-2">•</span> Artisans qualifiés</li>
-                        </ul>
-                    </div>
-                </div>
+          <!-- CHAUFFAGE -->
+          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+            <div class="flex items-start mb-6">
+              <div class="w-16 h-16 bg-orange-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-white rounded-full"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">CHAUFFAGE</h3>
+                <p class="text-gray-600 mb-2">La solution chauffage adaptée à votre logement</p>
+                <p class="text-gray-600 mb-2">Dépannage, entretien et installation de vos équipements de chauffage et climatisation.</p>
+                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE Chauffage + et PG</p>
+                <button onclick={() => openServiceModal('chauffage')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                  En savoir +
+                </button>
+              </div>
             </div>
-        </section>
-        {/if}
+          </div>
 
-        {#if currentSection === 'contact'}
-        <section class="py-16 px-4">
-            <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-12 animate-fade-in">
-                    <h2 class="text-4xl font-bold mb-4 gradient-text">Contactez-nous</h2>
-                    <p class="text-xl text-gray-600">Devis gratuit et sans engagement</p>
-                </div>
-
-                <div class="grid lg:grid-cols-2 gap-12">
-                    <div class="glass-effect rounded-3xl p-8 animate-slide-up">
-                        <h3 class="text-2xl font-bold mb-6">Demande de devis</h3>
-                        <form class="space-y-4" onsubmit={handleContactForm}>
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <input type="text" placeholder="Nom *" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" bind:value={formData.nom}>
-                                <input type="tel" placeholder="Téléphone *" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" bind:value={formData.telephone}>
-                            </div>
-                            <input type="email" placeholder="Email *" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" bind:value={formData.email}>
-                            <input type="text" placeholder="Adresse d'intervention" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" bind:value={formData.adresse}>
-                            
-                            <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" bind:value={selectedService}>
-                                <option value="">Type d'intervention</option>
-                                {#each services as service}
-                                <option value={service.id} selected={selectedService === service.id}>{service.nom}</option>
-                                {/each}
-                            </select>
-                            
-                            <textarea placeholder="Description détaillée du problème *" required class="w-full p-3 border border-gray-300 rounded-lg h-32 focus:ring-2 focus:ring-blue-500 focus:border-transparent" bind:value={formData.description}></textarea>
-                            
-                            <div class="flex items-center space-x-2">
-                                <input type="checkbox" id="urgence" class="w-4 h-4 text-red-500 focus:ring-red-500" bind:checked={formData.urgence}>
-                                <label for="urgence" class="text-red-500 font-medium">Intervention d'urgence</label>
-                            </div>
-                            
-                            <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
-                                Envoyer ma demande
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="space-y-8 animate-fade-in">
-                        <div class="glass-effect rounded-2xl p-6">
-                            <h3 class="text-xl font-bold mb-4 gradient-text">Coordonnées</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center">
-                                    <span class="text-2xl mr-3">📞</span>
-                                    <div>
-                                        <div class="font-semibold">Urgence 24h/7j</div>
-                                        <div class="text-blue-500">01 23 45 67 89</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <span class="text-2xl mr-3">📧</span>
-                                    <div>
-                                        <div class="font-semibold">Email</div>
-                                        <div class="text-blue-500">contact@plombipro.fr</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <span class="text-2xl mr-3">📍</span>
-                                    <div>
-                                        <div class="font-semibold">Zone d'intervention</div>
-                                        <div class="text-gray-600">Paris et Île-de-France</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass-effect rounded-2xl p-6">
-                            <h3 class="text-xl font-bold mb-4 gradient-text">Horaires</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between">
-                                    <span>Lundi - Vendredi</span>
-                                    <span class="font-semibold">8h00 - 19h00</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>Samedi</span>
-                                    <span class="font-semibold">8h00 - 17h00</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>Dimanche</span>
-                                    <span class="font-semibold">9h00 - 16h00</span>
-                                </div>
-                                <div class="border-t pt-2 mt-3">
-                                    <div class="text-red-500 font-semibold">🚨 Urgences : 24h/7j</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="glass-effect rounded-2xl p-6">
-                            <h3 class="text-xl font-bold mb-4 gradient-text">Moyens de paiement</h3>
-                            <div class="grid grid-cols-2 gap-4 text-center">
-                                <div class="bg-white/50 rounded-lg p-3">💳 Carte bancaire</div>
-                                <div class="bg-white/50 rounded-lg p-3">💵 Espèces</div>
-                                <div class="bg-white/50 rounded-lg p-3">🏦 Virement</div>
-                                <div class="bg-white/50 rounded-lg p-3">📝 Chèque</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <!-- DÉGORGEMENT -->
+          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+            <div class="flex items-start mb-6">
+              <div class="w-16 h-16 bg-blue-400 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-white rounded-lg"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">DÉGORGEMENT</h3>
+                <p class="text-gray-600 mb-2">Débouchage canalisations 7J/7</p>
+                <p class="text-gray-600 mb-4">Dépannage urgent débouchage canalisation (à haute pression), curage, travaux d'assainissement</p>
+                <button onclick={() => openServiceModal('debouchage')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                  En savoir +
+                </button>
+              </div>
             </div>
-        </section>
-        {/if}
-    </main>
-    
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div>
-                    <div class="text-2xl font-bold mb-4 gradient-text">🔧 PlombiPro</div>
-                    <p class="text-gray-300 mb-4">Votre expert en plomberie et chauffage en Île-de-France. Service professionnel et intervention rapide.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">📘</a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">📷</a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">🐦</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold mb-4">Services</h4>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><a href="#" class="hover:text-white transition-colors">Réparation fuites</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Débouchage</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Installation chauffage</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Sanitaire</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold mb-4">Informations</h4>
-                    <ul class="space-y-2 text-gray-300">
-                        <li><a href="#" class="hover:text-white transition-colors">Devis gratuit</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Zone d'intervention</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Garanties</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Urgences</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="font-bold mb-4">Contact</h4>
-                    <div class="space-y-2 text-gray-300">
-                        <div class="flex items-center">
-                            <span class="mr-2">📞</span>
-                            <span>01 23 45 67 89</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="mr-2">📧</span>
-                            <span>contact@plombipro.fr</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="mr-2">📍</span>
-                            <span>Paris & Île-de-France</span>
-                        </div>
-                    </div>
-                </div>
+          </div>
+
+          <!-- BALLON EAU CHAUDE -->
+          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+            <div class="flex items-start mb-6">
+              <div class="w-16 h-16 bg-red-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-white rounded-full"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">BALLON EAU CHAUDE / CHAUFFE EAU</h3>
+                <p class="text-gray-600 mb-2">Un grand choix de chauffe-eau et ballon d'eau chaude, marque & stock</p>
+                <p class="text-gray-600 mb-2">Dépannage, entretien, installation ballon d'eau chaude, chauffe-eau électrique, chauffe-eau thermodynamique</p>
+                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE</p>
+                <button onclick={() => openServiceModal('ballon')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                  En savoir +
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHAUDIÈRE GAZ -->
+          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+            <div class="flex items-start mb-6">
+              <div class="w-16 h-16 bg-yellow-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-white rounded"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">CHAUDIÈRE GAZ</h3>
+                <p class="text-gray-600 mb-2">Un grand choix de chauffe-eau et ballon d'eau chaude, marque & stock</p>
+                <p class="text-gray-600 mb-2">Entretien, dépannage et remplacement de votre ancienne chaudière par une chaudière à gaz</p>
+                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE et PG</p>
+                <button onclick={() => openServiceModal('chaudiere')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                  En savoir +
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- POMPE À CHALEUR -->
+          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
+            <div class="flex items-start mb-6">
+              <div class="w-16 h-16 bg-green-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
+                <div class="w-8 h-8 bg-white rounded-full"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">POMPE À CHALEUR / CLIMATISATION</h3>
+                <p class="text-gray-600 mb-2">La solution climatisation pour rafraîchir votre habitation</p>
+                <p class="text-gray-600 mb-2">Entretien pompe à chaleur, installation pompe à chaleur air/air et air/eau</p>
+                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE et agréée QUALIPAC</p>
+                <button onclick={() => openServiceModal('pompe')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                  En savoir +
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Service Details Modal -->
+    {#if isModalOpen && selectedService}
+<div class="fixed inset-0 bg-white/30 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-100" role="dialog" aria-modal="true">
+          <!-- Modal Header -->
+          <div class="flex items-center justify-between p-6 border-b">
+            <div>
+              <h3 class="text-2xl font-bold text-gray-800">{selectedService.title}</h3>
+              <p class="text-gray-600">{selectedService.subtitle}</p>
+            </div>
+            <button onclick={closeModal} class="text-gray-400 hover:text-gray-600 text-2xl font-bold transition-colors" aria-label="Close">
+              ×
+            </button>
+          </div>
+          
+          <!-- Modal Content -->
+          <div class="p-6">
+            <p class="text-gray-700 mb-6 leading-relaxed">{selectedService.description}</p>
+            
+            <!-- Features List -->
+            <div class="mb-6">
+              <h4 class="text-lg font-semibold text-gray-800 mb-4">Nos prestations :</h4>
+              <ul class="space-y-2">
+                {#each selectedService.features as feature}
+                  <li class="flex items-center text-gray-700">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                    {feature}
+                  </li>
+                {/each}
+              </ul>
             </div>
             
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© 2024 PlombiPro. Tous droits réservés. | Mentions légales | Politique de confidentialité</p>
+            <!-- Certifications -->
+            {#if selectedService.certifications.length > 0}
+              <div class="mb-6">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4">Certifications :</h4>
+                <div class="flex flex-wrap gap-2">
+                  {#each selectedService.certifications as cert}
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      {cert}
+                    </span>
+                  {/each}
+                </div>
+              </div>
+            {/if}
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button onclick={() => navigate('/rdv')} class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                Prendre rendez-vous
+              </button>
+              <button class="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                Appeler maintenant
+              </button>
             </div>
+          </div>
         </div>
-    </footer>
-    
-    <!-- Floating Action Button -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <a href="tel:0123456789" class="bg-red-500 text-white p-4 rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 animate-pulse-glow block text-center">
-            <div class="text-2xl">📞</div>
-            <div class="text-xs font-semibold mt-1">Urgence</div>
-        </a>
+      </div>
+    {/if}
+  </div>
+
+{:else if $currentRoute === '/rdv'}
+  <RdvStep1 />
+{:else if $currentRoute === '/rdv/step2'}
+  <RdvStep2 />
+{:else if $currentRoute === '/rdv/step3'}
+  <RdvStep3 />
+{:else}
+  <!-- 404 Page -->
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-800 mb-4">404 - Page non trouvée</h1>
+      <button onclick={() => navigate('/')} class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Retour à l'accueil
+      </button>
     </div>
-</div>
+  </div>
+{/if}
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-12 ">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-4 gap-8">
+      <div>
+        <h4 class="text-lg font-bold mb-4">FRD Services</h4>
+        <p class="text-gray-300">Spécialiste du dépannage urgent en plomberie et chauffage.</p>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold mb-4">Services</h4>
+        <ul class="space-y-2 text-gray-300">
+          <li>Plomberie</li>
+          <li>Chauffage</li>
+          <li>Climatisation</li>
+          <li>Débouchage</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold mb-4">Zones d'intervention</h4>
+        <ul class="space-y-2 text-gray-300">
+          <li>Île-de-France</li>
+          <li>Orléans (45)</li>
+          <li>Tours (37)</li>
+          <li>Caen (14)</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold mb-4">Contact</h4>
+        <div class="space-y-2 text-gray-300">
+          <p>Urgences 24h/24</p>
+          <p>Devis gratuit</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+      <p>&copy; 2024 FRD Services. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
