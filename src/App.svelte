@@ -3,10 +3,10 @@
   import { onMount } from 'svelte';
   import { currentRoute, initRouter, navigate } from './lib/router.js';
   
-  // Import components
-  import RdvStep1 from './components/RdvStep1.svelte';
-  import RdvStep2 from './components/RdvStep2.svelte';
-  import RdvStep3 from './components/RdvStep3.svelte';
+
+  import RdvFlow from './components/RdvFlow.svelte';
+
+
   
   let selectedService = $state<typeof services[keyof typeof services] | null>(null);
   let isModalOpen = $state(false);
@@ -543,11 +543,7 @@
   </div>
 
 {:else if $currentRoute === '/rdv'}
-  <RdvStep1 />
-{:else if $currentRoute === '/rdv/step2'}
-  <RdvStep2 />
-{:else if $currentRoute === '/rdv/step3'}
-  <RdvStep3 />
+  <RdvFlow />
 {:else}
   <!-- 404 Page -->
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
