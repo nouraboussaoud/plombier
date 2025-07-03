@@ -445,7 +445,7 @@
       <!-- Step 2: Category Selection -->
       {#if currentStep === 2}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Choisissez la catégorie - DÉPANNAGE</h2>
           </div>
           <div class="p-8">
@@ -483,7 +483,7 @@
       <!-- Step 3: WC Problem Selection -->
       {#if currentStep === 3}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Quel est plus précisément votre problème ?</h2>
             <p class="text-center text-blue-100 mt-2">Catégorie : WC</p>
           </div>
@@ -519,7 +519,7 @@
       <!-- Step 4: Sanibroyeur Question (only for WC bouchés) -->
       {#if currentStep === 4}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Votre WC est équipé d'un sanibroyeur ?</h2>
             <p class="text-center text-purple-100 mt-2">Cette information nous aide à estimer le prix</p>
           </div>
@@ -558,7 +558,7 @@
       <!-- Step 5: WC Type Question (for fuite and fonctionnement-defectueux) -->
       {#if currentStep === 5}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Quel type de WC possédez-vous ?</h2>
             <p class="text-center text-indigo-100 mt-2">Le type de WC influence le tarif d'intervention</p>
           </div>
@@ -572,7 +572,8 @@
                 >
                   <div class="text-4xl mb-4">
                     {#if type.id === 'simple'}🚽
-                    {:else if type.id === 'suspendu'}🏗️
+                    {:else if type.id === 'suspendu'}<img src="WC_suspendu.svg" alt="WC Suspendu" class="w-15 h-15 mx-auto" />
+                    {:else if type.id === 'autre'}🛠️
                     {:else}❓{/if}
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 mb-2">{type.name}</h3>
@@ -587,7 +588,7 @@
       <!-- Step 6: House Age / TVA Question -->
       {#if currentStep === 6}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Âge de votre logement</h2>
             <p class="text-center text-green-100 mt-2">Pour appliquer le bon taux de TVA</p>
           </div>
@@ -618,7 +619,7 @@
       <!-- Step 7: Updated Summary with calculated price -->
       {#if currentStep === 7}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center flex items-center justify-center">
               <CheckCircle class="w-8 h-8 mr-3" />
               Récapitulatif de votre demande
@@ -729,7 +730,7 @@
       <!-- Update step numbers for contact form (Step 8) and success (Step 9) -->
       {#if currentStep === 8}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-green-500 text-white p-8">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center flex items-center justify-center">
               <User class="w-8 h-8 mr-3" />
               Vos informations
