@@ -14,6 +14,9 @@
     Phone,
     User,
     Mail,
+    Thermometer,
+    Wind,
+    Hammer
   } from 'lucide-svelte';
   import { navigate } from '../lib/router.js';
   import { supabase } from '../lib/supabase.js';
@@ -21,6 +24,7 @@
   let currentStep = $state(1);
   let selectedServiceType = $state('');
   let selectedCategory = $state('');
+  let selectedSubCategory = $state('');
   let selectedProblem = $state('');
   
   // Contact form data
@@ -38,7 +42,7 @@
   let isSubmitting = $state(false);
   let isSubmitted = $state(false);
   let submitMessage = $state('');
-  
+
   // Get today's date in YYYY-MM-DD format for date input
   const today = new Date().toISOString().split('T')[0];
 
@@ -58,7 +62,7 @@
       description: 'Pose et installation d\'équipements',
       icon: Settings,
       color: 'bg-blue-500',
-      available: false,
+      available: true,
     },
     {
       id: 'entretien',
@@ -66,12 +70,30 @@
       description: 'Maintenance préventive',
       icon: CheckCircle,
       color: 'bg-green-500',
-      available: false,
+      available: true,
     },
   ];
 
-  // Step 2: Categories (only for dépannage)
-  const categories = [
+  // Step 2: Installation sub-categories
+  const installationTypes = [
+    {
+      id: 'installation-equipement',
+      name: 'UNE INSTALLATION D\'ÉQUIPEMENT',
+      description: 'Installation de nouveaux équipements',
+      icon: Settings,
+      color: 'bg-blue-500',
+    },
+    {
+      id: 'remplacement-equipement',
+      name: 'UN REMPLACEMENT D\'ÉQUIPEMENT',
+      description: 'Remplacement d\'équipements existants',
+      icon: Hammer,
+      color: 'bg-orange-500',
+    },
+  ];
+
+  // Categories for dépannage
+  const depannageCategories = [
     {
       id: 'wc',
       name: 'WC',
@@ -86,7 +108,7 @@
       description: '(INCLUS ROBINETTERIE)',
       icon: Droplets,
       color: 'bg-blue-400',
-      available: false,
+      available: true,
     },
     {
       id: 'lavabo-evier',
@@ -94,7 +116,7 @@
       description: '(INCLUS ROBINETTERIE)',
       icon: Droplets,
       color: 'bg-cyan-500',
-      available: false,
+      available: true,
     },
     {
       id: 'canalisation',
@@ -102,7 +124,7 @@
       description: '(HORS DOUCHE, BAIGNOIRE, LAVABO, ÉVIER)',
       icon: Settings,
       color: 'bg-gray-500',
-      available: false,
+      available: true,
     },
     {
       id: 'tuyau-machine',
@@ -110,7 +132,7 @@
       description: '(MACHINE À LAVER, LAVE VAISSELLE)',
       icon: Settings,
       color: 'bg-purple-500',
-      available: false,
+      available: true,
     },
     {
       id: 'ballon-chaudiere',
@@ -118,11 +140,161 @@
       description: 'CHAUDIÈRE, PAC AIR-EAU, PAC AIR-AIR',
       icon: Zap,
       color: 'bg-orange-500',
-      available: false,
+      available: true,
     },
   ];
 
-  // Step 3: Specific WC problems
+  // Categories for installation
+  const installationCategories = [
+  {
+    id: 'wc',
+    name: 'WC',
+    description: 'Installation de toilettes',
+    icon: Home,
+    color: 'bg-blue-500',
+    basePrice: 350,
+  },
+  {
+    id: 'bac-douche',
+    name: 'BAC À DOUCHE',
+    description: 'Installation de bac à douche',
+    icon: Droplets,
+    color: 'bg-blue-400',
+    basePrice: 450,
+  },
+  {
+    id: 'baignoire',
+    name: 'BAIGNOIRE',
+    description: 'Installation de baignoire',
+    icon: Droplets,
+    color: 'bg-cyan-500',
+    basePrice: 650,
+  },
+  {
+    id: 'lavabo',
+    name: 'LAVABO',
+    description: 'Installation de lavabo',
+    icon: Droplets,
+    color: 'bg-teal-500',
+    basePrice: 280,
+  },
+  {
+    id: 'evier',
+    name: 'EVIER',
+    description: 'Installation d\'évier',
+    icon: Droplets,
+    color: 'bg-indigo-500',
+    basePrice: 320,
+  },
+  {
+    id: 'robinet',
+    name: 'ROBINET',
+    description: 'Installation de robinetterie',
+    icon: Settings,
+    color: 'bg-gray-500',
+    basePrice: 150,
+  },
+  {
+    id: 'ballon-eau-chaude',
+    name: 'BALLON D\'EAU CHAUDE',
+    description: 'Installation de ballon d\'eau chaude',
+    icon: Thermometer,
+    color: 'bg-red-500',
+    basePrice: 850,
+  },
+  {
+    id: 'chaudiere-gaz',
+    name: 'CHAUDIÈRE GAZ',
+    description: 'Installation de chaudière gaz',
+    icon: Zap,
+    color: 'bg-orange-500',
+    basePrice: 1200,
+  },
+  {
+    id: 'chauffe-eau-gaz',
+    name: 'CHAUFFE-EAU GAZ / THERMODYNAMIQUE',
+    description: 'Installation de chauffe-eau',
+    icon: Thermometer,
+    color: 'bg-yellow-500',
+    basePrice: 950,
+  },
+  {
+    id: 'pac-air-eau',
+    name: 'POMPE À CHALEUR AIR-EAU',
+    description: 'Installation PAC air-eau',
+    icon: Wind,
+    color: 'bg-green-500',
+    basePrice: 2500,
+  },
+  {
+    id: 'pac-air-air',
+    name: 'POMPE À CHALEUR AIR-AIR',
+    description: 'Installation PAC air-air',
+    icon: Wind,
+    color: 'bg-emerald-500',
+    basePrice: 1800,
+  },
+];
+
+  // Categories for entretien
+  const entretienCategories = [
+  {
+    id: 'ballon-eau-chaude',
+    name: 'UN BALLON D\'EAU CHAUDE',
+    description: 'Contrat d\'entretien ballon',
+    icon: Thermometer,
+    color: 'bg-red-500',
+    basePrice: 120,
+    frequency: 'annuel',
+  },
+  {
+    id: 'chaudiere',
+    name: 'UNE CHAUDIÈRE',
+    description: 'Contrat d\'entretien chaudière',
+    icon: Zap,
+    color: 'bg-orange-500',
+    basePrice: 150,
+    frequency: 'annuel',
+  },
+  {
+    id: 'chauffe-eau-gaz',
+    name: 'UN CHAUFFE-EAU GAZ',
+    description: 'Contrat d\'entretien chauffe-eau gaz',
+    icon: Thermometer,
+    color: 'bg-yellow-500',
+    basePrice: 130,
+    frequency: 'annuel',
+  },
+  {
+    id: 'chauffe-eau-thermodynamique',
+    name: 'UN CHAUFFE-EAU THERMODYNAMIQUE',
+    description: 'Contrat d\'entretien thermodynamique',
+    icon: Thermometer,
+    color: 'bg-amber-500',
+    basePrice: 140,
+    frequency: 'annuel',
+  },
+  {
+    id: 'pompe-chaleur',
+    name: 'UNE POMPE À CHALEUR',
+    description: 'Contrat d\'entretien PAC',
+    icon: Wind,
+    color: 'bg-green-500',
+    basePrice: 180,
+    frequency: 'annuel',
+  },
+  {
+    id: 'climatisation-reversible',
+    name: 'UNE CLIMATISATION RÉVERSIBLE',
+    description: 'Contrat d\'entretien climatisation',
+    icon: Wind,
+    color: 'bg-blue-600',
+    basePrice: 160,
+    frequency: 'annuel',
+  },
+];
+
+  // Problems for WC (dépannage)
   const wcProblems = [
     {
       id: 'wc-bouches',
@@ -131,6 +303,7 @@
       icon: '🚽',
       urgency: 'urgent',
       needsSanibroyeur: true,
+      basePrice: 80,
     },
     {
       id: 'fuite',
@@ -139,6 +312,7 @@
       icon: '💧',
       urgency: 'rapide',
       needsWcType: true,
+      basePrice: 90,
     },
     {
       id: 'fonctionnement-defectueux',
@@ -147,10 +321,151 @@
       icon: '⚙️',
       urgency: 'planifie',
       needsWcType: true,
+      basePrice: 70,
     },
   ];
 
-  // New state variables
+  // Problems for Douche et Baignoire
+  const doucheBaignoireProblems = [
+    {
+      id: 'fuite-douche',
+      name: 'Fuite douche/baignoire',
+      description: 'Fuite au niveau de la douche ou baignoire',
+      icon: '🚿',
+      urgency: 'rapide',
+      basePrice: 90,
+    },
+    {
+      id: 'evacuation-bouchee',
+      name: 'Évacuation bouchée',
+      description: 'Évacuation douche/baignoire obstruée',
+      icon: '🔧',
+      urgency: 'urgent',
+      basePrice: 100,
+    },
+    {
+      id: 'robinetterie-defaillante',
+      name: 'Robinetterie défaillante',
+      description: 'Problème de robinet ou mitigeur',
+      icon: '🚰',
+      urgency: 'planifie',
+      basePrice: 80,
+    },
+  ];
+
+  // Problems for Lavabo et Évier
+  const labavoEvierProblems = [
+    {
+      id: 'fuite-lavabo',
+      name: 'Fuite lavabo/évier',
+      description: 'Fuite au niveau du lavabo ou évier',
+      icon: '🚰',
+      urgency: 'rapide',
+      basePrice: 85,
+    },
+    {
+      id: 'evacuation-lente',
+      name: 'Évacuation lente',
+      description: 'Évacuation qui se vide lentement',
+      icon: '⏳',
+      urgency: 'planifie',
+      basePrice: 75,
+    },
+    {
+      id: 'robinet-casse',
+      name: 'Robinet cassé',
+      description: 'Robinet défaillant ou cassé',
+      icon: '🔧',
+      urgency: 'rapide',
+      basePrice: 90,
+    },
+  ];
+
+  // Problems for Canalisation et Tuyauterie
+  const canalisationProblems = [
+    {
+      id: 'canalisation-bouchee',
+      name: 'Canalisation bouchée',
+      description: 'Obstruction dans les canalisations',
+      icon: '🚫',
+      urgency: 'urgent',
+      basePrice: 120,
+    },
+    {
+      id: 'fuite-canalisation',
+      name: 'Fuite canalisation',
+      description: 'Fuite dans la tuyauterie',
+      icon: '💧',
+      urgency: 'urgent',
+      basePrice: 110,
+    },
+    {
+      id: 'odeur-remontee',
+      name: 'Odeur remontée',
+      description: 'Mauvaises odeurs des canalisations',
+      icon: '💨',
+      urgency: 'planifie',
+      basePrice: 95,
+    },
+  ];
+
+  // Problems for Tuyau Machine
+  const tuyauMachineProblems = [
+    {
+      id: 'fuite-tuyau-machine',
+      name: 'Fuite tuyau machine',
+      description: 'Fuite sur tuyau machine à laver/lave-vaisselle',
+      icon: '🔧',
+      urgency: 'urgent',
+      basePrice: 80,
+    },
+    {
+      id: 'raccordement-defaillant',
+      name: 'Raccordement défaillant',
+      description: 'Problème de raccordement machine',
+      icon: '⚙️',
+      urgency: 'rapide',
+      basePrice: 75,
+    },
+    {
+      id: 'installation-tuyau',
+      name: 'Installation nouveau tuyau',
+      description: 'Installation ou remplacement tuyau',
+      icon: '🔨',
+      urgency: 'planifie',
+      basePrice: 85,
+    },
+  ];
+
+  // Problems for Ballon/Chaudière
+  const ballonChaudiereProblems = [
+    {
+      id: 'panne-ballon',
+      name: 'Panne ballon eau chaude',
+      description: 'Ballon d\'eau chaude en panne',
+      icon: '🔥',
+      urgency: 'urgent',
+      basePrice: 150,
+    },
+    {
+      id: 'fuite-ballon',
+      name: 'Fuite ballon/chaudière',
+      description: 'Fuite sur ballon ou chaudière',
+      icon: '💧',
+      urgency: 'urgent',
+      basePrice: 140,
+    },
+    {
+      id: 'probleme-chauffe-eau',
+      name: 'Problème chauffe-eau',
+      description: 'Dysfonctionnement chauffe-eau',
+      icon: '⚡',
+      urgency: 'rapide',
+      basePrice: 130,
+    },
+  ];
+
+  // State variables for dépannage
   let hasSanibroyeur = $state('');
   let wcType = $state('');
   let houseAge = $state('');
@@ -178,26 +493,49 @@
     }
   ];
 
+  function getCurrentProblems() {
+    switch (selectedCategory) {
+      case 'wc':
+        return wcProblems;
+      case 'douche-baignoire':
+        return doucheBaignoireProblems;
+      case 'lavabo-evier':
+        return labavoEvierProblems;
+      case 'canalisation':
+        return canalisationProblems;
+      case 'tuyau-machine':
+        return tuyauMachineProblems;
+      case 'ballon-chaudiere':
+        return ballonChaudiereProblems;
+      default:
+        return [];
+    }
+  }
+
   // Price calculation function
   function calculatePrice() {
-    if (!selectedProblemData) return null;
-    
+  if (selectedServiceType === 'depannage' && selectedProblemData) {
     let basePrice = 0;
     
     // Base prices for WC problems
-    if (selectedProblem === 'wc-bouches') {
-      if (hasSanibroyeur === 'oui') {
-        basePrice = 150; // Prix fixe avec sanibroyeur
-      } else {
-        basePrice = 80; // Prix de base sans sanibroyeur
+    if (selectedCategory === 'wc') {
+      if (selectedProblem === 'wc-bouches') {
+        if (hasSanibroyeur === 'oui') {
+          basePrice = 150; // Prix fixe avec sanibroyeur
+        } else {
+          basePrice = 80; // Prix de base sans sanibroyeur
+        }
+      } else if (selectedProblem === 'fuite') {
+        basePrice = wcType === 'suspendu' ? 120 : wcType === 'simple' ? 90 : 100;
+      } else if (selectedProblem === 'fonctionnement-defectueux') {
+        basePrice = wcType === 'suspendu' ? 100 : wcType === 'simple' ? 70 : 85;
       }
-    } else if (selectedProblem === 'fuite') {
-      basePrice = wcType === 'suspendu' ? 120 : wcType === 'simple' ? 90 : 100;
-    } else if (selectedProblem === 'fonctionnement-defectueux') {
-      basePrice = wcType === 'suspendu' ? 100 : wcType === 'simple' ? 70 : 85;
+    } else {
+      // For other categories, use the base price from the problem definition
+      basePrice = selectedProblemData.basePrice || 100;
     }
     
-    // Apply TVA
+    // Apply TVA for dépannage
     const selectedHouseAge = houseAgeOptions.find(h => h.id === houseAge);
     if (selectedHouseAge) {
       const tvaMultiplier = 1 + (selectedHouseAge.tva / 100);
@@ -205,19 +543,80 @@
     }
     
     return basePrice;
+  } else if (selectedServiceType === 'installation') {
+    // Installation pricing
+    const category = installationCategories.find(c => c.id === selectedCategory);
+    if (category) {
+      let basePrice = category.basePrice;
+      
+      // Apply multiplier for replacement vs new installation
+      if (selectedSubCategory === 'remplacement-equipement') {
+        basePrice = Math.round(basePrice * 0.8); // 20% discount for replacement
+      }
+      
+      // Apply TVA (assume 20% for installation)
+      return Math.round(basePrice * 1.2);
+    }
+  } else if (selectedServiceType === 'entretien') {
+    // Entretien pricing
+    const category = entretienCategories.find(c => c.id === selectedCategory);
+    if (category) {
+      // Apply TVA (10% for maintenance)
+      return Math.round(category.basePrice * 1.1);
+    }
+  }
+  
+  return null;
+}
+
+  // Navigation functions
+  function handleServiceTypeSelect(serviceId: string) {
+    selectedServiceType = serviceId;
+    if (serviceId === 'depannage') {
+      currentStep = 2; // Go to dépannage category selection
+    } else if (serviceId === 'installation') {
+      currentStep = 10; // Go to installation type selection
+    } else if (serviceId === 'entretien') {
+      currentStep = 20; // Go to entretien category selection
+    }
   }
 
-  // Update step navigation functions
+  function handleInstallationTypeSelect(typeId: string) {
+    selectedSubCategory = typeId;
+    currentStep = 11; // Go to installation category selection
+  }
+
+  function handleCategorySelect(categoryId: string) {
+    selectedCategory = categoryId;
+    if (selectedServiceType === 'depannage') {
+      // Check if this category has specific problems
+      const problems = getCurrentProblems();
+      if (problems.length > 0) {
+        currentStep = 3; // Go to problem selection
+      } else {
+        currentStep = 6; // Go directly to house age question
+      }
+    } else {
+      // For installation and entretien, go directly to summary
+      currentStep = 30; // Go to summary
+    }
+  }
+
   function handleProblemSelect(problemId: string) {
     selectedProblem = problemId;
-    const problem = wcProblems.find(p => p.id === problemId);
     
-    if (problem?.needsSanibroyeur) {
-      currentStep = 4; // Sanibroyeur question
-    } else if (problem?.needsWcType) {
-      currentStep = 5; // WC type question
+    if (selectedCategory === 'wc') {
+      const problem = wcProblems.find(p => p.id === problemId);
+      if (problem?.needsSanibroyeur) {
+        currentStep = 4; // Sanibroyeur question
+      } else if (problem?.needsWcType) {
+        currentStep = 5; // WC type question
+      } else {
+        currentStep = 6; // House age question
+      }
     } else {
-      currentStep = 6; // House age question
+      // For other categories, go directly to house age question
+      currentStep = 6;
     }
   }
 
@@ -244,12 +643,18 @@
     isSubmitting = true;
     
     try {
+      const serviceDescription = selectedServiceType === 'depannage'
+        ? `${selectedServiceType}-${selectedCategory}-${selectedProblem}`
+        : selectedServiceType === 'installation'
+        ? `${selectedServiceType}-${selectedSubCategory}-${selectedCategory}`
+        : `${selectedServiceType}-${selectedCategory}`;
+
       const appointmentData = {
         first_name: contactData.firstName,
         last_name: contactData.lastName,
         email: contactData.email,
         phone: contactData.phone,
-        service: `${selectedServiceType}-${selectedCategory}-${selectedProblem}`,
+        service: serviceDescription,
         urgency: selectedProblemData?.urgency || 'planifie',
         preferred_date: contactData.preferredDate || null,
         preferred_time: contactData.preferredTime || null,
@@ -286,13 +691,28 @@
         // Coming from house age question
         if (selectedProblem === 'wc-bouches') {
           currentStep = 4; // Back to sanibroyeur question
-        } else {
+        } else if (selectedProblem && (selectedProblem === 'fuite' || selectedProblem === 'fonctionnement-defectueux')) {
           currentStep = 5; // Back to WC type question
+        } else {
+          currentStep = 3; // Back to problem selection
         }
       } else if (currentStep === 5) {
         currentStep = 3; // Back to problem selection
       } else if (currentStep === 4) {
         currentStep = 3; // Back to problem selection
+      } else if (currentStep === 11) {
+        currentStep = 10; // Back to installation type selection
+      } else if (currentStep === 10 || currentStep === 20) {
+        currentStep = 1; // Back to service type selection
+      } else if (currentStep === 30) {
+        // Back from summary
+        if (selectedServiceType === 'depannage') {
+          currentStep = 2;
+        } else if (selectedServiceType === 'installation') {
+          currentStep = 11;
+        } else if (selectedServiceType === 'entretien') {
+          currentStep = 20;
+        }
       } else {
         currentStep = currentStep - 1;
       }
@@ -303,7 +723,11 @@
     currentStep = 1;
     selectedServiceType = '';
     selectedCategory = '';
+    selectedSubCategory = '';
     selectedProblem = '';
+    hasSanibroyeur = '';
+    wcType = '';
+    houseAge = '';
     contactData = {
       firstName: '',
       lastName: '',
@@ -316,29 +740,37 @@
     };
   }
 
-  function handleServiceTypeSelect(serviceId: string) {
-    selectedServiceType = serviceId;
-    if (serviceId === 'depannage') {
-      currentStep = 2; // Go to category selection
-    }
-    // For other service types, you can add logic here when they become available
-  }
-
-  function handleCategorySelect(categoryId: string) {
-    selectedCategory = categoryId;
-    if (categoryId === 'wc') {
-      currentStep = 3; // Go to WC problem selection
-    }
-    // For other categories, you can add logic here when they become available
-  }
-
   function goHome() {
     navigate('/');
   }
 
   // Derived values
-  const selectedProblemData = $derived(wcProblems.find((p) => p.id === selectedProblem));
+  const selectedProblemData = $derived.by(() => {
+    if (selectedCategory === 'wc') {
+      return wcProblems.find((p) => p.id === selectedProblem);
+    } else if (selectedCategory === 'douche-baignoire') {
+      return doucheBaignoireProblems.find((p) => p.id === selectedProblem);
+    } else if (selectedCategory === 'lavabo-evier') {
+      return labavoEvierProblems.find((p) => p.id === selectedProblem);
+    } else if (selectedCategory === 'canalisation') {
+      return canalisationProblems.find((p) => p.id === selectedProblem);
+    } else if (selectedCategory === 'tuyau-machine') {
+      return tuyauMachineProblems.find((p) => p.id === selectedProblem);
+    } else if (selectedCategory === 'ballon-chaudiere') {
+      return ballonChaudiereProblems.find((p) => p.id === selectedProblem);
+    }
+    return null;
+  });
+  
   const maxSteps = $derived(isSubmitted ? 9 : 8);
+
+  // Get current categories based on service type
+  const currentCategories = $derived.by(() => {
+    if (selectedServiceType === 'depannage') return depannageCategories;
+    if (selectedServiceType === 'installation') return installationCategories;
+    if (selectedServiceType === 'entretien') return entretienCategories;
+    return [];
+  });
 </script>
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -347,9 +779,7 @@
     <div class="container mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-orange-500 rounded-lg flex items-center justify-center">
-            <Droplets class="w-6 h-6 text-white" />
-          </div>
+          <img src="/logo.png" alt="FRD Services Logo" class="w-20 h-20">
           <div>
             <h1 class="text-2xl font-bold text-gray-800">FRD Services</h1>
             <p class="text-sm text-gray-600">Spécialiste du dépannage urgent</p>
@@ -386,7 +816,7 @@
               </div>
               {#if step < maxSteps}
                 <div 
-                  class="w-12 h-1 mx-2 "
+                  class="w-12 h-1 mx-2"
                   class:bg-blue-500={step < currentStep}
                   class:bg-gray-200={step >= currentStep}
                 ></div>
@@ -401,7 +831,7 @@
     </div>
   {/if}
 
-  <div class="container mx-auto px-4 py-8 ">
+  <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
 
       <!-- Step 1: Service Type Selection -->
@@ -416,13 +846,7 @@
                 <button
                   type="button"
                   onclick={() => handleServiceTypeSelect(service.id)}
-                  class="p-8 rounded-xl border-2 cursor-pointer transition-all duration-300 text-center"
-                  class:hover:shadow-lg={service.available}
-                  class:hover:border-blue-300={service.available}
-                  class:border-gray-200={service.available}
-                  class:opacity-50={!service.available}
-                  class:cursor-not-allowed={!service.available}
-                  class:border-gray-100={!service.available}
+                  class="p-8 rounded-xl border-2 cursor-pointer transition-all duration-300 text-center hover:shadow-lg hover:border-blue-300 border-gray-200"
                   aria-label={`Select ${service.name}`}
                 >
                   <div class="w-16 h-16 {service.color} rounded-full flex items-center justify-center mx-auto mb-4">
@@ -430,11 +854,6 @@
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 mb-2">{service.name}</h3>
                   <p class="text-gray-600">{service.description}</p>
-                  {#if !service.available}
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-3">
-                      Bientôt disponible
-                    </span>
-                  {/if}
                 </button>
               {/each}
             </div>
@@ -442,25 +861,19 @@
         </div>
       {/if}
 
-      <!-- Step 2: Category Selection -->
+      <!-- Step 2: Dépannage Category Selection -->
       {#if currentStep === 2}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+          <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Choisissez la catégorie - DÉPANNAGE</h2>
           </div>
           <div class="p-8">
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {#each categories as category}
+              {#each depannageCategories as category}
                 <button
                   type="button"
                   onclick={() => handleCategorySelect(category.id)}
-                  class="p-6 rounded-xl border-2 cursor-pointer transition-all duration-300"
-                  class:hover:shadow-lg={category.available}
-                  class:hover:border-blue-300={category.available}
-                  class:border-gray-200={category.available}
-                  class:opacity-50={!category.available}
-                  class:cursor-not-allowed={!category.available}
-                  class:border-gray-100={!category.available}
+                  class="p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-300 border-gray-200"
                   aria-label={`Select ${category.name}`}
                 >
                   <div class="w-12 h-12 {category.color} rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -468,11 +881,6 @@
                   </div>
                   <h3 class="font-bold text-gray-800 mb-2">{category.name}</h3>
                   <p class="text-sm text-gray-600">{category.description}</p>
-                  {#if !category.available}
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-3">
-                      Bientôt disponible
-                    </span>
-                  {/if}
                 </button>
               {/each}
             </div>
@@ -480,16 +888,16 @@
         </div>
       {/if}
 
-      <!-- Step 3: WC Problem Selection -->
+      <!-- Step 3: Problem Selection -->
       {#if currentStep === 3}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
           <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Quel est plus précisément votre problème ?</h2>
-            <p class="text-center text-blue-100 mt-2">Catégorie : WC</p>
+            <p class="text-center text-blue-100 mt-2">Catégorie : {depannageCategories.find(c => c.id === selectedCategory)?.name}</p>
           </div>
           <div class="p-8">
             <div class="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
-              {#each wcProblems as problem}
+              {#each getCurrentProblems() as problem}
                 <button
                   type="button"
                   onclick={() => handleProblemSelect(problem.id)}
@@ -505,6 +913,9 @@
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-gray-300 text-gray-700 capitalize">
                           {problem.urgency}
                         </span>
+                        {#if problem.basePrice}
+                          <span class="text-lg font-semibold text-blue-600">À partir de {problem.basePrice}€</span>
+                        {/if}
                       </div>
                     </div>
                     <ArrowRight class="w-6 h-6 text-gray-400" />
@@ -516,10 +927,10 @@
         </div>
       {/if}
 
-      <!-- Step 4: Sanibroyeur Question (only for WC bouchés) -->
+      <!-- Step 4: Sanibroyeur Question -->
       {#if currentStep === 4}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+          <div class="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Votre WC est équipé d'un sanibroyeur ?</h2>
             <p class="text-center text-purple-100 mt-2">Cette information nous aide à estimer le prix</p>
           </div>
@@ -555,10 +966,10 @@
         </div>
       {/if}
 
-      <!-- Step 5: WC Type Question (for fuite and fonctionnement-defectueux) -->
+      <!-- Step 5: WC Type Question -->
       {#if currentStep === 5}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+          <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Quel type de WC possédez-vous ?</h2>
             <p class="text-center text-indigo-100 mt-2">Le type de WC influence le tarif d'intervention</p>
           </div>
@@ -571,10 +982,13 @@
                   class="p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-300 border-gray-200 text-center"
                 >
                   <div class="text-4xl mb-4">
-                    {#if type.id === 'simple'}🚽
-                    {:else if type.id === 'suspendu'}<img src="WC_suspendu.svg" alt="WC Suspendu" class="w-15 h-15 mx-auto" />
-                    {:else if type.id === 'autre'}🛠️
-                    {:else}❓{/if}
+                    {#if type.id === 'simple'}
+                      🚽
+                    {:else if type.id === 'suspendu'}
+                      <img src="/WC_suspendu.svg" alt="WC Suspendu" class="w-12 h-12 mx-auto" />
+                    {:else}
+                      🛠️
+                    {/if}
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 mb-2">{type.name}</h3>
                   <p class="text-gray-600">{type.description}</p>
@@ -588,7 +1002,7 @@
       <!-- Step 6: House Age / TVA Question -->
       {#if currentStep === 6}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+          <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center">Âge de votre logement</h2>
             <p class="text-center text-green-100 mt-2">Pour appliquer le bon taux de TVA</p>
           </div>
@@ -601,8 +1015,11 @@
                   class="p-8 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-green-300 border-gray-200 text-center"
                 >
                   <div class="text-5xl mb-4">
-                    {#if option.id === 'plus-2-ans'}🏠
-                    {:else}🏗️{/if}
+                    {#if option.id === 'plus-2-ans'}
+                      🏠
+                    {:else}
+                      🏗️
+                    {/if}
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 mb-2">{option.name}</h3>
                   <p class="text-gray-600 mb-3">{option.description}</p>
@@ -616,10 +1033,10 @@
         </div>
       {/if}
 
-      <!-- Step 7: Updated Summary with calculated price -->
+      <!-- Step 7: Dépannage Summary -->
       {#if currentStep === 7}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+          <div class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center flex items-center justify-center">
               <CheckCircle class="w-8 h-8 mr-3" />
               Récapitulatif de votre demande
@@ -640,7 +1057,7 @@
                   <div class="flex justify-between items-center">
                     <span class="font-medium">Catégorie :</span>
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-gray-300 text-gray-700">
-                      WC
+                      {depannageCategories.find(c => c.id === selectedCategory)?.name}
                     </span>
                   </div>
                   <div class="flex justify-between items-center">
@@ -727,10 +1144,188 @@
         </div>
       {/if}
 
-      <!-- Update step numbers for contact form (Step 8) and success (Step 9) -->
-      {#if currentStep === 8}
+      <!-- Step 10: Installation Type Selection -->
+      {#if currentStep === 10}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
           <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+            <h2 class="text-3xl font-bold text-center">Votre demande concerne :</h2>
+            <p class="text-center text-blue-100 mt-2">INSTALLATION</p>
+          </div>
+          <div class="p-8">
+            <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              {#each installationTypes as type}
+                <button
+                  type="button"
+                  onclick={() => handleInstallationTypeSelect(type.id)}
+                  class="p-8 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-300 border-gray-200 text-center"
+                >
+                  <div class="w-16 h-16 {type.color} rounded-full flex items-center justify-center mx-auto mb-4">
+                    <type.icon class="w-8 h-8 text-white" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-800 mb-2">{type.name}</h3>
+                  <p class="text-gray-600">{type.description}</p>
+                </button>
+              {/each}
+            </div>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Step 11: Installation Category Selection -->
+      {#if currentStep === 11}
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+            <h2 class="text-3xl font-bold text-center">Votre demande d'installation concerne :</h2>
+          </div>
+          <div class="p-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {#each installationCategories as category}
+                <button
+                  type="button"
+                  onclick={() => handleCategorySelect(category.id)}
+                  class="p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-300 border-gray-200"
+                >
+                  <div class="w-12 h-12 {category.color} rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <category.icon class="w-6 h-6 text-white" />
+                  </div>
+                  <h3 class="font-bold text-gray-800 mb-2">{category.name}</h3>
+                  <p class="text-sm text-gray-600">{category.description}</p>
+                </button>
+              {/each}
+            </div>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Step 20: Entretien Category Selection -->
+      {#if currentStep === 20}
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-500 to-orange-500 text-white p-8">
+            <h2 class="text-3xl font-bold text-center">La souscription d'un contrat d'entretien (hors pièces) concerne :</h2>
+          </div>
+          <div class="p-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {#each entretienCategories as category}
+                <button
+                  type="button"
+                  onclick={() => handleCategorySelect(category.id)}
+                  class="p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-300 border-gray-200"
+                >
+                  <div class="w-12 h-12 {category.color} rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <category.icon class="w-6 h-6 text-white" />
+                  </div>
+                  <h3 class="font-bold text-gray-800 mb-2">{category.name}</h3>
+                  <p class="text-sm text-gray-600">{category.description}</p>
+                </button>
+              {/each}
+            </div>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Step 30: General Summary (for Installation and Entretien) -->
+      {#if currentStep === 30}
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-8">
+            <h2 class="text-3xl font-bold text-center flex items-center justify-center">
+              <CheckCircle class="w-8 h-8 mr-3" />
+              Récapitulatif de votre demande
+            </h2>
+          </div>
+          <div class="p-8">
+            <div class="max-w-2xl mx-auto">
+              <!-- Service Summary -->
+              <div class="bg-blue-50 rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-bold text-blue-800 mb-4">Votre sélection</h3>
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span class="font-medium">Type de service :</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {selectedServiceType === 'installation' ? 'bg-blue-500' : 'bg-green-500'} text-white uppercase">
+                      {selectedServiceType}
+                    </span>
+                  </div>
+                  {#if selectedSubCategory}
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium">Type :</span>
+                      <span class="font-semibold text-blue-700">
+                        {installationTypes.find(t => t.id === selectedSubCategory)?.name}
+                      </span>
+                    </div>
+                  {/if}
+                  <div class="flex justify-between items-center">
+                    <span class="font-medium">Équipement :</span>
+                    <span class="font-semibold text-blue-700">
+                      {currentCategories.find(c => c.id === selectedCategory)?.name}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Price Information -->
+              <div class="bg-green-50 rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-bold text-green-800 mb-4">
+                  {selectedServiceType === 'entretien' ? 'Prix annuel TTC' : 'Prix TTC'}
+                </h3>
+                <div class="text-center">
+                  {#if calculatePrice()}
+                    <div class="text-4xl font-bold text-green-600 mb-2">
+                      {calculatePrice()}€
+                    </div>
+                    <p class="text-gray-600">
+                      {selectedServiceType === 'installation' ? 'Prix estimé pour l\'installation' : 
+                       selectedServiceType === 'entretien' ? 'Contrat d\'entretien annuel' : 
+                       'Prix estimé'}
+                    </p>
+                  {:else}
+                    <div class="text-2xl font-bold text-orange-600 mb-2">Sur devis</div>
+                    <p class="text-gray-600">Prix personnalisé selon vos besoins</p>
+                  {/if}
+                </div>
+              </div>
+
+              <!-- What's included -->
+              <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
+                <h4 class="font-bold text-yellow-800 mb-3">💡 Notre prestation inclut :</h4>
+                <ul class="text-sm text-yellow-700 space-y-2">
+                  <li class="flex items-center">
+                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
+                    Étude technique et devis gratuit
+                  </li>
+                  <li class="flex items-center">
+                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
+                    {selectedServiceType === 'installation' ? 'Installation professionnelle' : 'Contrat d\'entretien personnalisé'}
+                  </li>
+                  <li class="flex items-center">
+                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
+                    Garantie sur les travaux
+                  </li>
+                  <li class="flex items-center">
+                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
+                    Suivi et conseils personnalisés
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick={goToContactForm} class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center">
+                  <Calendar class="w-5 h-5 mr-2" />
+                  Demander un devis
+                </button>
+                <button class="px-8 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg font-semibold transition-colors flex items-center justify-center">
+                  <Phone class="w-5 h-5 mr-2" />
+                  Appeler maintenant
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/if}
+
+      <!-- Step 8: Contact Form -->
+      {#if currentStep === 8}
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="bg-gradient-to-r from-blue-500 to-green-500 text-white p-8">
             <h2 class="text-3xl font-bold text-center flex items-center justify-center">
               <User class="w-8 h-8 mr-3" />
               Vos informations
@@ -928,7 +1523,7 @@
       {/if}
 
       <!-- Navigation Buttons -->
-      {#if currentStep > 1 && currentStep < 8}
+      {#if currentStep > 1 && currentStep < 8 || currentStep === 10 || currentStep === 11 || currentStep === 20 || currentStep === 30}
         <div class="flex justify-between items-center mt-8">
           <button 
             type="button"
@@ -939,7 +1534,7 @@
             <ArrowLeft class="w-4 h-4 mr-2" />
             Retour
           </button>
-          {#if currentStep < 7}
+          {#if currentStep < 7 && currentStep !== 30}
             <button 
               type="button"
               onclick={resetFlow}
@@ -955,7 +1550,7 @@
   </div>
 
   <!-- Service Features Footer -->
-  {#if currentStep <= 7}
+  {#if currentStep <= 30}
     <section class="bg-gray-50 py-12 mt-16">
       <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-4 gap-8">

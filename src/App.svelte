@@ -311,7 +311,7 @@
         <img 
           src="/Plumbing.jpg" 
           alt="Modern kitchen with boiler installation"
-          class="w-full h-full object-cover"
+          class="w-full h-full object-cover  max-sm:h-fit max-sm:object-cover animate-fade-in"
         />
       </div>
 
