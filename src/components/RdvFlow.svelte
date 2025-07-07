@@ -99,6 +99,7 @@
       name: 'WC',
       description: 'Toilettes et sanitaires',
       icon: Home,
+      image: '/wc.jpeg',
       color: 'bg-blue-500',
       available: true,
     },
@@ -107,6 +108,7 @@
       name: 'DOUCHE ET BAIGNOIRE',
       description: '(INCLUS ROBINETTERIE)',
       icon: Droplets,
+      image : '/2.jpeg',
       color: 'bg-blue-400',
       available: true,
     },
@@ -116,6 +118,7 @@
       description: '(INCLUS ROBINETTERIE)',
       icon: Droplets,
       color: 'bg-cyan-500',
+      image: '/3.jpeg',
       available: true,
     },
     {
@@ -123,6 +126,7 @@
       name: 'CANALISATION ET TUYAUTERIE',
       description: '(HORS DOUCHE, BAIGNOIRE, LAVABO, ÉVIER)',
       icon: Settings,
+      image: '/4.jpeg',
       color: 'bg-gray-500',
       available: true,
     },
@@ -132,6 +136,7 @@
       description: '(MACHINE À LAVER, LAVE VAISSELLE)',
       icon: Settings,
       color: 'bg-purple-500',
+      image: '/5.jpeg',
       available: true,
     },
     {
@@ -139,6 +144,7 @@
       name: 'BALLON D\'EAU CHAUDE, CHAUFFE-EAU',
       description: 'CHAUDIÈRE, PAC AIR-EAU, PAC AIR-AIR',
       icon: Zap,
+      image: '/6.jpeg',
       color: 'bg-orange-500',
       available: true,
     },
@@ -824,15 +830,12 @@
             </div>
           {/each}
         </div>
-        <div class="text-center mt-2">
-          <p class="text-sm text-gray-600">Étape {currentStep} sur {maxSteps}</p>
-        </div>
       </div>
     </div>
   {/if}
 
   <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto">
 
       <!-- Step 1: Service Type Selection -->
       {#if currentStep === 1}
@@ -863,30 +866,52 @@
 
       <!-- Step 2: Dépannage Category Selection -->
       {#if currentStep === 2}
-        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-          <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-8">
-            <h2 class="text-3xl font-bold text-center">Choisissez la catégorie - DÉPANNAGE</h2>
-          </div>
-          <div class="p-8">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {#each depannageCategories as category}
-                <button
-                  type="button"
-                  onclick={() => handleCategorySelect(category.id)}
-                  class="p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-300 border-gray-200"
-                  aria-label={`Select ${category.name}`}
-                >
-                  <div class="w-12 h-12 {category.color} rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <category.icon class="w-6 h-6 text-white" />
-                  </div>
-                  <h3 class="font-bold text-gray-800 mb-2">{category.name}</h3>
-                  <p class="text-sm text-gray-600">{category.description}</p>
-                </button>
-              {/each}
-            </div>
-          </div>
-        </div>
-      {/if}
+  <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+    <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-8">
+      <h2 class="text-3xl font-bold text-center">Choisissez la catégorie - DÉPANNAGE</h2>
+    </div>
+    <div class="p-8">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {#each depannageCategories as category}
+          <button
+            type="button"
+            onclick={() => handleCategorySelect(category.id)}
+            class="group relative rounded-xl border-2 border-gray-200 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-blue-400 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label={`Select ${category.name}`}
+          >
+            {#if category.image}
+              <!-- Image container with fixed aspect ratio -->
+              <div class="aspect-auto relative">
+                <img 
+                  src={category.image} 
+                  alt={category.name}
+                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <!-- Overlay for better text readability -->
+                <div class="absolute inset-0 bg-white opacity-40 transition-opacity duration-300 group-hover:opacity-0"></div>
+              </div>
+              
+              <!-- Text content overlay -->
+              <div class="absolute bottom-0 left-0 right-0 p-4 text-black">
+                <h3 class="font-bold text-lg mb-1 drop-shadow-lg">{category.name}</h3>
+                <p class="text-sm drop-shadow-lg leading-relaxed">{category.description}</p>
+              </div>
+            {:else}
+              <!-- Non-image categories -->
+              <div class="aspect-[4/3] flex flex-col items-center justify-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 group-hover:from-blue-50 group-hover:to-blue-100 transition-colors duration-300">
+                <div class="w-16 h-16 {category.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                  <svelte:component this={category.icon} class="w-8 h-8 text-white" />
+                </div>
+                <h3 class="font-bold text-gray-800 mb-2 text-center text-lg group-hover:text-blue-700 transition-colors duration-300">{category.name}</h3>
+                <p class="text-sm text-gray-600 text-center leading-relaxed group-hover:text-gray-700 transition-colors duration-300">{category.description}</p>
+              </div>
+            {/if}
+          </button>
+        {/each}
+      </div>
+    </div>
+  </div>
+{/if}
 
       <!-- Step 3: Problem Selection -->
       {#if currentStep === 3}
@@ -1551,35 +1576,66 @@
 
   <!-- Service Features Footer -->
   {#if currentStep <= 30}
-    <section class="bg-gray-50 py-12 mt-16">
-      <div class="container mx-auto px-4">
-        <div class="grid md:grid-cols-4 gap-8">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle class="w-8 h-8 text-blue-600" />
+  <section class="bg-gradient-to-br from-gray-50 to-gray-100 py-16 mt-16">
+    <div class="container mx-auto px-4">
+      <div class="grid max-sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Feature 1 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-auto">
+              <img 
+                src="a.jpeg" 
+                alt="Estimation tarifaire avant le RDV"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             </div>
-            <h3 class="font-bold text-gray-800 mb-2">ESTIMATION TARIFAIRE AVANT LE RDV</h3>
           </div>
-          <div class="text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Clock class="w-8 h-8 text-red-600" />
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-auto">
+              <img 
+                src="b.jpeg" 
+                alt="Dépannage 7J/7 24H/24"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             </div>
-            <h3 class="font-bold text-gray-800 mb-2">DÉPANNAGE 7J/7 24H/24</h3>
           </div>
-          <div class="text-center">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin class="w-8 h-8 text-green-600" />
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-auto">
+              <img 
+                src="c.jpeg" 
+                alt="Intervention sur toute l'Île-de-France"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             </div>
-            <h3 class="font-bold text-gray-800 mb-2">INTERVENTION SUR TOUTE L'ÎLE-DE-FRANCE</h3>
           </div>
-          <div class="text-center">
-            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Wrench class="w-8 h-8 text-orange-600" />
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-auto">
+              <img 
+                src="d.jpeg" 
+                alt="Une équipe qualifiée et certifiée"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             </div>
-            <h3 class="font-bold text-gray-800 mb-2">UNE ÉQUIPE QUALIFIÉE ET CERTIFIÉE</h3>
           </div>
         </div>
       </div>
-    </section>
-  {/if}
+    </div>
+  </section>
+{/if}
 </div>

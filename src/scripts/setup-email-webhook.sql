@@ -6,8 +6,8 @@ CREATE OR REPLACE FUNCTION send_appointment_email()
 RETURNS TRIGGER AS $$
 DECLARE
   webhook_url TEXT := 'https://api.resend.com/emails';
-  resend_api_key TEXT := 're_iGCHd1xy_8yfjz5SCgKTgrXkHaYTZJQ7S'; -- Replace with your actual API key
-  admin_email TEXT := 'nour.aboussaoud@esprit.tn'; -- Replace with your email
+  resend_api_key TEXT := 're_TyZTJuQZ_NMo8bRvi27wLFcfuGrv9gWVL'; -- Replace with your actual API key
+  admin_email TEXT := 'dhifallahahmed92@gmail.com'; -- Replace with your email
   urgency_text TEXT;
   urgency_color TEXT;
   email_subject TEXT;
