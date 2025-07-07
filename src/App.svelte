@@ -286,7 +286,7 @@
 </header>
 
     <!-- Navigation -->
-    <nav class="bg-gray-50 border-t border-gray-200 sticky top-24 z-30 backdrop-blur-sm bg-gray-50/95">
+    <nav class="bg-gray-400 border-t border-gray-200 sticky top-24 z-30 backdrop-blur-sm rounded-b-4xl shadow-lg">
       <div class="container mx-auto px-4">
         <div class="flex flex-wrap justify-center space-x-1 py-3">
           {#each navItems as item}
@@ -365,121 +365,196 @@
     </section>
 
     <!-- Services Grid -->
-    <section bind:this={servicesRef} class="py-16 bg-gray-50 animate-on-scroll">
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Nos Services</h2>
-        
-        <!-- Main Services Grid -->
-        <div class="grid lg:grid-cols-2 gap-8 mb-8">
-          
-          <!-- PLOMBERIE -->
-          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
-            <div class="flex items-start mb-6">
-              <div class="w-16 h-16 bg-blue-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
-                <div class="w-8 h-8 bg-white rounded"></div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">PLOMBERIE</h3>
-                <p class="text-gray-600 mb-4">Dépannage urgent, installation et rénovation de plomberie</p>
-                <button onclick={() => openServiceModal('plomberie')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                  En savoir +
-                </button>
-              </div>
-            </div>
+    <section bind:this={servicesRef} class="pt-16 bg-gray-50 animate-on-scroll">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Nos Services</h2>
+    
+    <!-- Main Services Grid -->
+    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8 mb-8">
+      
+      <!-- PLOMBERIE -->
+      <div class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
+           style="background-image: url('service1.jpeg');"
+           onclick={() => openServiceModal('plomberie')}>
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"></div>
+        <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">PLOMBERIE</h3>
+            <p class="text-gray-200 text-sm mb-2">Installation WC suspendu et WC lavant</p>
           </div>
-
-          <!-- CHAUFFAGE -->
-          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
-            <div class="flex items-start mb-6">
-              <div class="w-16 h-16 bg-orange-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
-                <div class="w-8 h-8 bg-white rounded-full"></div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">CHAUFFAGE</h3>
-                <p class="text-gray-600 mb-2">La solution chauffage adaptée à votre logement</p>
-                <p class="text-gray-600 mb-2">Dépannage, entretien et installation de vos équipements de chauffage et climatisation.</p>
-                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE Chauffage + et PG</p>
-                <button onclick={() => openServiceModal('chauffage')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                  En savoir +
-                </button>
-              </div>
-            </div>
+          <div>
+            <p class="text-gray-300 text-sm mb-4">Dépannage urgent, installation et rénovation de plomberie</p>
+            <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
+              EN SAVOIR +
+            </button>
           </div>
-
-          <!-- DÉGORGEMENT -->
-          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
-            <div class="flex items-start mb-6">
-              <div class="w-16 h-16 bg-blue-400 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
-                <div class="w-8 h-8 bg-white rounded-lg"></div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">DÉGORGEMENT</h3>
-                <p class="text-gray-600 mb-2">Débouchage canalisations 7J/7</p>
-                <p class="text-gray-600 mb-4">Dépannage urgent débouchage canalisation (à haute pression), curage, travaux d'assainissement</p>
-                <button onclick={() => openServiceModal('debouchage')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                  En savoir +
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- BALLON EAU CHAUDE -->
-          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
-            <div class="flex items-start mb-6">
-              <div class="w-16 h-16 bg-red-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
-                <div class="w-8 h-8 bg-white rounded-full"></div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">BALLON EAU CHAUDE / CHAUFFE EAU</h3>
-                <p class="text-gray-600 mb-2">Un grand choix de chauffe-eau et ballon d'eau chaude, marque & stock</p>
-                <p class="text-gray-600 mb-2">Dépannage, entretien, installation ballon d'eau chaude, chauffe-eau électrique, chauffe-eau thermodynamique</p>
-                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE</p>
-                <button onclick={() => openServiceModal('ballon')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                  En savoir +
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- CHAUDIÈRE GAZ -->
-          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
-            <div class="flex items-start mb-6">
-              <div class="w-16 h-16 bg-yellow-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
-                <div class="w-8 h-8 bg-white rounded"></div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">CHAUDIÈRE GAZ</h3>
-                <p class="text-gray-600 mb-2">Un grand choix de chauffe-eau et ballon d'eau chaude, marque & stock</p>
-                <p class="text-gray-600 mb-2">Entretien, dépannage et remplacement de votre ancienne chaudière par une chaudière à gaz</p>
-                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE et PG</p>
-                <button onclick={() => openServiceModal('chaudiere')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                  En savoir +
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- POMPE À CHALEUR -->
-          <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll">
-            <div class="flex items-start mb-6">
-              <div class="w-16 h-16 bg-green-500 rounded-lg mr-6 flex items-center justify-center flex-shrink-0">
-                <div class="w-8 h-8 bg-white rounded-full"></div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">POMPE À CHALEUR / CLIMATISATION</h3>
-                <p class="text-gray-600 mb-2">La solution climatisation pour rafraîchir votre habitation</p>
-                <p class="text-gray-600 mb-2">Entretien pompe à chaleur, installation pompe à chaleur air/air et air/eau</p>
-                <p class="text-sm text-green-600 font-semibold mb-4">FRD Services qualifiée RGE et agréée QUALIPAC</p>
-                <button onclick={() => openServiceModal('pompe')} class="text-blue-600 hover:text-blue-800 font-semibold transition-colors">
-                  En savoir +
-                </button>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
-    </section>
+
+      <!-- CHAUFFAGE -->
+      <div class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
+           style="background-image: url('service2.jpeg');"
+           onclick={() => openServiceModal('chauffage')}>
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"></div>
+        <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">CHAUFFAGE</h3>
+            <p class="text-gray-200 text-sm mb-2">La solution chauffage adaptée à votre logement</p>
+          </div>
+          <div>
+            <p class="text-gray-300 text-sm mb-2">Dépannage, entretien et installation de vos équipements de chauffage et climatisation.</p>
+            <p class="text-orange-400 text-xs font-semibold mb-4">FRD Services qualifiée RGE Chauffage + et PG</p>
+            <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
+              EN SAVOIR +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÉGORGEMENT -->
+      <div class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
+           style="background-image: url('service6.jpeg');"
+           onclick={() => openServiceModal('debouchage')}>
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"></div>
+        <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">DÉGORGEMENT</h3>
+            <p class="text-gray-200 text-sm mb-2">Débouchage canalisations 7J/7</p>
+          </div>
+          <div>
+            <p class="text-gray-300 text-sm mb-4">Dépannage urgent débouchage canalisation (à haute pression), curage, travaux d'assainissement</p>
+            <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
+              EN SAVOIR +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BALLON EAU CHAUDE -->
+      <div class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
+           style="background-image: url('service4.jpeg');"
+           onclick={() => openServiceModal('ballon')}>
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"></div>
+        <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">BALLON EAU CHAUDE / CHAUFFE EAU</h3>
+            <p class="text-gray-200 text-sm mb-2">Un grand choix de chauffe-eau et ballon d'eau chaude, marque & stock</p>
+          </div>
+          <div>
+            <p class="text-gray-300 text-sm mb-2">Dépannage, entretien, installation ballon d'eau chaude, chauffe-eau électrique, chauffe-eau thermodynamique</p>
+            <p class="text-orange-400 text-xs font-semibold mb-4">FRD Services qualifiée RGE</p>
+            <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
+              EN SAVOIR +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAUDIÈRE GAZ -->
+      <div class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
+           style="background-image: url('service5.jpeg');"
+           onclick={() => openServiceModal('chaudiere')}>
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"></div>
+        <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">CHAUDIÈRE GAZ</h3>
+            <p class="text-gray-200 text-sm mb-2">Un grand choix de chauffe-eau et ballon d'eau chaude, marque & stock</p>
+          </div>
+          <div>
+            <p class="text-gray-300 text-sm mb-2">Entretien, dépannage et remplacement de votre ancienne chaudière par une chaudière à gaz</p>
+            <p class="text-orange-400 text-xs font-semibold mb-4">FRD Services qualifiée RGE et PG</p>
+            <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
+              EN SAVOIR +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- POMPE À CHALEUR -->
+      <div class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
+           style="background-image: url('service3.jpeg');"
+           onclick={() => openServiceModal('pompe')}>
+        <div class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"></div>
+        <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-2">POMPE À CHALEUR / CLIMATISATION</h3>
+            <p class="text-gray-200 text-sm mb-2">La solution climatisation pour rafraîchir votre habitation</p>
+          </div>
+          <div>
+            <p class="text-gray-300 text-sm mb-2">Entretien pompe à chaleur, installation pompe à chaleur air/air et air/eau</p>
+            <p class="text-orange-400 text-xs font-semibold mb-4">FRD Services qualifiée RGE et agréée QUALIPAC</p>
+            <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm font-semibold transition-colors">
+              EN SAVOIR +
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <section class="bg-gradient-to-br from-gray-50 to-gray-100 py-16 mt-16">
+    <div class="container mx-auto px-20">
+      <div class="grid max-sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Feature 1 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-square">
+              <img 
+                src="a.jpeg" 
+                alt="Estimation tarifaire avant le RDV"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t to-transparent"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-square">
+              <img 
+                src="b.jpeg" 
+                alt="Dépannage 7J/7 24H/24"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 "></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-square">
+              <img 
+                src="c.jpeg" 
+                alt="Intervention sur toute l'Île-de-France"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 "></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="group">
+          <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <div class="aspect-square">
+              <img 
+                src="d.jpeg" 
+                alt="Une équipe qualifiée et certifiée"
+                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <div class="absolute inset-0 "></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
     <!-- Service Details Modal -->
     {#if isModalOpen && selectedService}

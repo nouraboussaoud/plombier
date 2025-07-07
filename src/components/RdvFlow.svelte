@@ -1577,18 +1577,18 @@
   <!-- Service Features Footer -->
   {#if currentStep <= 30}
   <section class="bg-gradient-to-br from-gray-50 to-gray-100 py-16 mt-16">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-20">
       <div class="grid max-sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Feature 1 -->
         <div class="group">
           <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
-            <div class="aspect-auto">
+            <div class="aspect-square">
               <img 
                 src="a.jpeg" 
                 alt="Estimation tarifaire avant le RDV"
                 class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t to-transparent"></div>
             </div>
           </div>
         </div>
@@ -1596,13 +1596,13 @@
         <!-- Feature 2 -->
         <div class="group">
           <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
-            <div class="aspect-auto">
+            <div class="aspect-square">
               <img 
                 src="b.jpeg" 
                 alt="Dépannage 7J/7 24H/24"
                 class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div class="absolute inset-0 "></div>
             </div>
           </div>
         </div>
@@ -1610,13 +1610,13 @@
         <!-- Feature 3 -->
         <div class="group">
           <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
-            <div class="aspect-auto">
+            <div class="aspect-square">
               <img 
                 src="c.jpeg" 
                 alt="Intervention sur toute l'Île-de-France"
                 class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div class="absolute inset-0 "></div>
             </div>
           </div>
         </div>
@@ -1624,13 +1624,13 @@
         <!-- Feature 4 -->
         <div class="group">
           <div class="relative overflow-hidden rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-105">
-            <div class="aspect-auto">
+            <div class="aspect-square">
               <img 
                 src="d.jpeg" 
                 alt="Une équipe qualifiée et certifiée"
                 class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+              <div class="absolute inset-0 "></div>
             </div>
           </div>
         </div>
