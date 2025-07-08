@@ -1577,7 +1577,7 @@
   <!-- Service Features Footer -->
   {#if currentStep <= 30}
   <section class="bg-gradient-to-br from-gray-50 to-gray-100 py-16 mt-16">
-    <div class="container mx-auto px-20">
+    <div class="container mx-auto px-20 max-sm:px-4">
       <div class="grid max-sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Feature 1 -->
         <div class="group">

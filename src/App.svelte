@@ -187,7 +187,7 @@
     <div class="sticky top-0 z-30 w-full">
       <!-- Header Image -->
       <img
-        src="nav.jpeg"
+        src="nav.png"
         alt=""
         class="w-full h-full object-cover animate-fade-in"
       />
@@ -254,62 +254,52 @@
     </div>
 
     <!-- Hero Section -->
-    <section bind:this={heroRef} class="relative min-h-[600px] overflow-hidden">
+    <section
+      bind:this={heroRef}
+      class="relative min-h-[600px] overflow-hidden max-sm:min-h-[400px]"
+    >
       <!-- Kitchen background image with parallax -->
       <div class="absolute inset-0 parallax-bg" style="--scroll: {scrollY}">
         <img
-          src="/Plumbing.jpg"
+          src="/design.png"
           alt="Modern kitchen with boiler installation"
-          class="w-full h-full object-cover max-sm:h-fit max-sm:object-cover animate-fade-in"
+          class="w-full h-full object-cover max-sm:object-fill animate-fade-in"
         />
-      </div>
-
-      <!-- Blue geometric overlay -->
-      <div
-        class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-blue-500/40"
-      >
-        <!-- Hexagonal pattern overlay -->
-        <div class="absolute right-0 top-0 w-2/3 h-full">
-          <div class="relative w-full h-full">
-            <!-- Large hexagonal shape -->
-            <div
-              class="absolute right-0 top-1/4 w-96 h-96 bg-white/90 transform rotate-45 rounded-3xl animate-pulse"
-            ></div>
-
-            <!-- Hexagonal dots pattern -->
-            <div
-              class="absolute right-20 top-20 grid grid-cols-8 gap-2 opacity-30"
-            >
-              {#each Array(64) as _, i}
-                <div
-                  class="w-4 h-4 bg-blue-300 rounded-full animate-pulse"
-                  style="animation-delay: {i * 0.1}s"
-                ></div>
-              {/each}
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Action buttons -->
       <div
-        class="absolute right-8 top-1/2 transform -translate-y-1/2 space-y-4"
+        class="absolute left-8 top-1/2 transform -translate-y-1/2 space-y-4 max-sm:left-1/6 max-sm:-translate-x-1/2 max-sm:top-1/3 max-sm:space-y-2"
       >
         <button
-          class="w-16 h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl"
+          class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
-          <Phone size={24} />
+          <Phone size={36} class="max-sm:w-8 max-sm:h-8" />
         </button>
         <button
-          class="w-16 h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl"
+          class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
-          <Mail size={24} />
+          <Mail size={36} class="max-sm:w-8 max-sm:h-8" />
         </button>
         <button
           onclick={() => navigate("/rdv")}
-          class="w-16 h-16 bg-orange-500 hover:bg-orange-600 text-white rounded-lg shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl"
+          class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
-          <Calendar size={24} />
+          <Calendar size={36} class="max-sm:w-8 max-sm:h-8" />
+        </button>
+      </div>
+      <div
+        class="absolute left-8 top-3/4 transform translate-x-1/2 flex space-x-4 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[70%] max-sm:flex-col max-sm:space-x-0 max-sm:space-y-2 max-sm:w-3/4"
+      >
+        <button
+          class="p-3 bg-orange-600 hover:bg-orange-700 text-white rounded-4xl shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl max-sm:text-sm max-sm:p-2"
+        >
+          RDV Intervention & Devis
+        </button>
+        <button
+          class="p-3 bg-orange-600 hover:bg-orange-700 text-white rounded-4xl shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl max-sm:text-sm max-sm:p-2"
+        >
+          FRD Services
         </button>
       </div>
     </section>
@@ -340,7 +330,6 @@
           <video
             src="/video.mp4"
             autoplay
-            loop
             playsinline
             controls
             class="w-auto h-auto rounded-lg shadow-md"
@@ -572,7 +561,7 @@
     </section>
 
     <section class="bg-gradient-to-br from-gray-50 to-gray-100 py-16 mt-16">
-      <div class="container mx-auto px-20">
+      <div class="container mx-auto px-20 max-sm:px-4">
         <div
           class="grid max-sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
