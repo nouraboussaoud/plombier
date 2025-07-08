@@ -154,7 +154,6 @@
     { label: "CHAUDIÈRE GAZ", key: "chaudiere" },
     { label: "POMPE À CHALEUR/CLIMATISATION", key: "pompe" },
     { label: "VOS PROJETS", key: "projets" },
-    { label: "FRD Services", key: "about" },
   ];
 
   function handleNavClick(key: string) {
