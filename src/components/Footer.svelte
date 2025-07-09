@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { onMount } from "svelte";
     import { navigate } from "../lib/router";
     import Nous from "./Nous.svelte";
@@ -16,6 +16,7 @@
                 text: "Politique de confidentialité",
                 page: "/#/politique-confidentialite",
             },
+            { text: "Mentions légales", page: "/#/mentions-legales" },
         ],
         devis: [
             { text: "Devis chauffe-eau électrique", href: "#" },
@@ -35,6 +36,20 @@
 
     const locations =
         "Paris 75 (siège) | Melun (77) | Versailles (78) | Monthéry (91) | Saint-Maur-des-Fossés (94) | Caen (14) | Orléans (45) | Tours (37)";
+
+    function navigateAndScrollToTop(page: string) {
+        navigate(page);
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+    }
+
+    function navigateToRdvAndScrollToTop() {
+        navigate("/rdv");
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+    }
 </script>
 
 <footer
@@ -155,7 +170,7 @@
                     {#each footerLinks.FRD as link}
                         <li>
                             <button
-                                onclick={() => navigate(link.page)}
+                                onclick={() => navigateAndScrollToTop(link.page)}
                                 class="text-sm hover:text-blue-200 transition-colors"
                             >
                                 {link.text}
@@ -172,7 +187,7 @@
                     {#each footerLinks.devis as link}
                         <li>
                             <button
-                                onclick={() => navigate("/rdv")}
+                                onclick={() => navigateToRdvAndScrollToTop()}
                                 class="text-sm hover:text-blue-200 transition-colors cursor-pointer"
                             >
                                 {link.text}
@@ -191,6 +206,7 @@
                             <a
                                 href={link.href}
                                 class="text-sm hover:text-blue-200 transition-colors"
+                                onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                             >
                                 {link.text}
                             </a>

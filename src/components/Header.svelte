@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { navigate } from "../lib/router";
+
 
   export let navItems: Array<{ label: string; key: string }>;
   export let handleNavClick: (key: string) => void;
@@ -10,9 +12,10 @@
 <div class="sticky top-0 z-30 w-full">
   <!-- Header Image -->
   <img
+  onclick={() => navigate('/')}
     src="nav.png"
     alt=""
-    class="w-full h-full object-cover animate-fade-in"
+    class="w-full h-full object-cover animate-fade-in cursor-pointer"
   />
 
   <!-- Nav Bar Container -->

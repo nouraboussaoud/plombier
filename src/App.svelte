@@ -18,6 +18,7 @@
   import Cgv from "./components/CGV.svelte";
   import Engagements from "./components/Engagements.svelte";
   import Politique from "./components/Politique.svelte";
+  import Mentions from "./components/Mentions.svelte";
 
   let selectedService = $state<(typeof services)[keyof typeof services] | null>(
     null,
@@ -25,11 +26,30 @@
   let isModalOpen = $state(false);
   let scrollY = $state(0);
   let isOpen = $state(false);
-
-  // Scroll animations
+  let isVisible = $state(false);
+  let contentRef = $state();
   let heroRef = $state();
   let servicesRef = $state();
-  let contentRef = $state();
+
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          isVisible = true;
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (contentRef && contentRef instanceof Element) {
+      observer.observe(contentRef);
+    }
+
+    return () => observer.disconnect();
+  });
+
+  // Scroll animations
 
   onMount(() => {
     initRouter();
@@ -161,7 +181,7 @@
     { label: "RDV INTERVENTION & DEVIS", key: "rdv" },
     { label: "CHAUDIÈRE GAZ", key: "chaudiere" },
     { label: "POMPE À CHALEUR/CLIMATISATION", key: "pompe" },
-    { label: "VOS PROJETS", key: "projets" },
+    { label: "NOS PROJETS", key: "projets" },
   ];
 
   function handleNavClick(key: string) {
@@ -193,7 +213,7 @@
 
 <div class="min-h-screen bg-white">
   <!-- Header -->
-  <Header {navItems} {handleNavClick} {isOpen} toggleMenu={toggleMenu} />
+  <Header {navItems} {handleNavClick} {isOpen} {toggleMenu} />
 
   {#if $currentRoute === "/"}
     <!-- Hero Section -->
@@ -205,8 +225,13 @@
       <div class="absolute inset-0 parallax-bg" style="--scroll: {scrollY}">
         <img
           src="/design.png"
-          alt="Modern kitchen with boiler installation"
-          class="w-full h-full object-cover max-sm:object-fill animate-fade-in"
+          alt="plombier"
+          class="w-full h-full object-cover max-sm:hidden animate-fade-in"
+        />
+        <img
+          src="/design-mobile.png"
+          alt="plombier"
+          class="w-full h-full hidden max-sm:block animate-fade-in"
         />
       </div>
 
@@ -233,6 +258,7 @@
       </div>
       <div
         class="absolute left-8 top-3/4 transform translate-x-1/2 flex space-x-4 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[70%] max-sm:flex-col max-sm:space-x-0 max-sm:space-y-2 max-sm:w-3/4"
+        on:click={() => navigate("/rdv")}
       >
         <button
           class="p-3 bg-orange-600 hover:bg-orange-700 text-white rounded-4xl shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl max-sm:text-sm max-sm:p-2"
@@ -248,48 +274,186 @@
     </section>
 
     <!-- Content Section -->
-    <section bind:this={contentRef} class="py-16 bg-white animate-on-scroll">
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
-            FRD Services Plomberie Chauffage, Spécialiste du dépannage urgent
-          </h2>
-          <p class="text-lg text-gray-600 leading-relaxed">
-            <strong>FRD Services,</strong> Spécialiste des interventions d'urgence
-            en plomberie et chauffage FRD Services est une entreprise spécialisée
-            dans les interventions d’urgence. Nous intervenons rapidement et efficacement
-            dans tout Paris pour des travaux de plomberie et de chauffage. Nous couvrons
-            également les travaux d’entretien, d’installation de vos appareils sanitaires,
-            équipements de chauffage et de climatisation.
-          </p>
-        </div>
-      </div>
-
+    <section bind:this={contentRef} class="relative py-20 overflow-hidden">
+      <!-- Background Elements -->
       <div
-        class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 px-20 py-8 max-sm:px-4"
-      >
-        <!-- Video Section -->
-        <div class="w-full md:w-1/2 aspect-video">
-          <video
-            src="/video.mp4"
-            autoplay
-            playsinline
-            controls
-            class="w-auto h-auto rounded-lg shadow-md"
-          ></video>
+        class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50"
+      ></div>
+      <div
+        class="absolute top-0 left-0 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"
+      ></div>
+      <div
+        class="absolute bottom-0 right-0 w-72 h-72 bg-cyan-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"
+        style="animation-delay: 2s;"
+      ></div>
+
+      <!-- Content Container -->
+      <div class="relative container mx-auto px-4">
+        <!-- Header Section -->
+        <div class="max-w-5xl mx-auto text-center mb-16">
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mb-8 transform transition-all duration-700 {isVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'}"
+          >
+            <svg
+              class="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 8.172V5L8 4z"
+              ></path>
+            </svg>
+          </div>
+
+          <h2
+            class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-800 via-blue-600 to-cyan-600 bg-clip-text text-transparent mb-6 transform transition-all duration-700 leading-tight {isVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'}"
+            style="transition-delay: 0.1s;"
+          >
+            FRD Services
+          </h2>
+
+          <div
+            class="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 mx-auto mb-6 transform transition-all duration-700 {isVisible
+              ? 'scale-x-100 opacity-100'
+              : 'scale-x-0 opacity-0'}"
+            style="transition-delay: 0.2s;"
+          ></div>
+
+          <p
+            class="text-xl md:text-2xl text-gray-600 font-medium mb-4 transform transition-all duration-700 {isVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'}"
+            style="transition-delay: 0.3s;"
+          >
+            Spécialiste du dépannage urgent
+          </p>
+
+          <p
+            class="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto transform transition-all duration-700 {isVisible
+              ? 'translate-y-0 opacity-100'
+              : 'translate-y-8 opacity-0'}"
+            style="transition-delay: 0.4s;"
+          >
+            <span class="font-semibold text-blue-600">FRD Services</span>,
+            Spécialiste des interventions d'urgence en plomberie et chauffage
+            FRD Services est une entreprise spécialisée dans les interventions
+            d’urgence. Nous intervenons rapidement et efficacement dans tout
+            Paris pour des travaux de plomberie et de chauffage. Nous couvrons
+            également les travaux d’entretien, d’installation de vos appareils
+            sanitaires, équipements de chauffage et de climatisation.
+          </p>
         </div>
 
-        <!-- Text Section -->
-        <div class="w-full md:w-1/2 text-center md:text-left space-y-4">
-          <p class="text-xl text-gray-600 leading-relaxed">
-            Fuite d’eau, débouchage de WC, canalisation bouchée, intervention
-            sur ballon d’eau chaude, chauffe-eau électrique ou thermodynamique,
-            désembouage de circuit de chauffage, remplacement de radiateurs à
-            eau, entretien de chaudière gaz, installation de pompe à chaleur
-            air/air ou air/eau, etc. Faites appel à FRD Services, les
-            spécialistes de la PLOMBERIE, du CHAUFFAGE et de la CLIMATISATION,
-            c’est notre métier !
-          </p>
+        <!-- Main Content Section -->
+        <div
+          class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 max-w-6xl mx-auto"
+        >
+          <!-- Video Section -->
+          <div
+            class="w-full lg:w-1/2 transform transition-all duration-700 {isVisible
+              ? 'translate-x-0 opacity-100'
+              : '-translate-x-8 opacity-0'}"
+            style="transition-delay: 0.5s;"
+          >
+            <div class="relative group">
+              <div
+                class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"
+              ></div>
+              <div class="relative">
+                <video
+                  src="/video.mp4"
+                  autoplay
+                  playsinline
+                  controls
+                  class="w-full h-auto rounded-xl shadow-2xl border-4 border-white/50 backdrop-blur-sm transition-transform duration-300 hover:scale-105"
+                ></video>
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl pointer-events-none"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text Section -->
+          <div
+            class="w-full lg:w-1/2 text-center lg:text-left space-y-6 transform transition-all duration-700 {isVisible
+              ? 'translate-x-0 opacity-100'
+              : 'translate-x-8 opacity-0'}"
+            style="transition-delay: 0.6s;"
+          >
+            <div
+              class="bg-white/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20 hover:shadow-2xl transition-shadow duration-300"
+            >
+              <div class="space-y-4">
+                <div
+                  class="flex items-start space-x-3 p-3 rounded-lg hover:bg-blue-50/50 transition-colors duration-200"
+                >
+                  Fuite d’eau, débouchage de WC, canalisation bouchée,
+                  intervention sur ballon d’eau chaude, chauffe-eau électrique
+                  ou thermodynamique, désembouage de circuit de chauffage,
+                  remplacement de radiateurs à eau, entretien de chaudière gaz,
+                  installation de pompe à chaleur air/air ou air/eau, etc.
+                </div>
+              </div>
+
+              <div
+                class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-l-4 border-blue-500 hover:shadow-lg transition-shadow duration-300"
+              >
+                <p
+                  class="text-lg font-semibold text-gray-800 text-center lg:text-left"
+                >
+                  Faites appel à <span class="text-blue-600">FRD Services</span
+                  >, les spécialistes de la
+                  <span class="font-bold text-blue-600">PLOMBERIE</span>, du
+                  <span class="font-bold text-blue-600">CHAUFFAGE</span> et de
+                  la
+                  <span class="font-bold text-blue-600">CLIMATISATION</span>
+                </p>
+                <p
+                  class="text-blue-600 font-medium mt-2 text-center lg:text-left"
+                >
+                  C'est notre métier !
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div
+          class="mt-16 text-center transform transition-all duration-700 {isVisible
+            ? 'translate-y-0 opacity-100'
+            : 'translate-y-8 opacity-0'}"
+          style="transition-delay: 0.7s;"
+        >
+          <div
+            class="inline-flex items-center justify-center space-x-6 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              ></path>
+            </svg>
+            <span class="text-lg font-semibold"
+              >Contactez-nous pour une intervention rapide</span
+            >
+          </div>
         </div>
       </div>
     </section>
@@ -580,7 +744,7 @@
     <!-- Service Details Modal -->
     {#if isModalOpen && selectedService}
       <div
-        class="fixed inset-0 bg-white/30 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
+        class="fixed inset-0 bg-white/30 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in z-40"
         role="dialog"
         aria-modal="true"
       >
@@ -675,6 +839,8 @@
     <Engagements />
   {:else if $currentRoute === "/#/politique-confidentialite"}
     <Politique />
+  {:else if $currentRoute === "/#/mentions-legales"}
+    <Mentions />
   {:else}
     <!-- 404 Page -->
     <div class="min-h-screen bg-gray-100 flex items-center justify-center">
