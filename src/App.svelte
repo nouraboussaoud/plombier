@@ -10,13 +10,21 @@
   import { onMount } from "svelte";
   import { currentRoute, initRouter, navigate } from "./lib/router.js";
 
+  import Header from "./components/Header.svelte";
   import RdvFlow from "./components/RdvFlow.svelte";
+  import Footer from "./components/Footer.svelte";
+  import Nous from "./components/Nous.svelte";
+  import Contact from "./components/Contact.svelte";
+  import Cgv from "./components/CGV.svelte";
+  import Engagements from "./components/Engagements.svelte";
+  import Politique from "./components/Politique.svelte";
 
   let selectedService = $state<(typeof services)[keyof typeof services] | null>(
     null,
   );
   let isModalOpen = $state(false);
   let scrollY = $state(0);
+  let isOpen = $state(false);
 
   // Scroll animations
   let heroRef = $state();
@@ -133,7 +141,7 @@
       title: "POMPE À CHALEUR/CLIMATISATION",
       subtitle: "La solution climatisation pour rafraîchir votre habitation",
       description:
-        "Installation et entretien de pompes à chaleur air/air et air/eau. Solutions de climatisation pour un confort optimal toute l'année.",
+        "Installation et entretien de pompes à chaleur air/air et air/eu. Solutions de climatisation pour un confort optimal toute l'année.",
       features: [
         "Pompe à chaleur air/air",
         "Pompe à chaleur air/eau",
@@ -175,84 +183,19 @@
     isModalOpen = false;
     selectedService = null;
   }
-  let isOpen = $state(false);
+
+  function toggleMenu() {
+    isOpen = !isOpen;
+  }
 </script>
 
 <svelte:window bind:scrollY />
 
-{#if $currentRoute === "/"}
-  <div class="min-h-screen bg-white">
-    <!-- Header -->
+<div class="min-h-screen bg-white">
+  <!-- Header -->
+  <Header {navItems} {handleNavClick} {isOpen} toggleMenu={toggleMenu} />
 
-    <div class="sticky top-0 z-30 w-full">
-      <!-- Header Image -->
-      <img
-        src="nav.png"
-        alt=""
-        class="w-full h-full object-cover animate-fade-in"
-      />
-
-      <!-- Nav Bar Container -->
-      <nav
-        class="bg-orange-600 border-t border-white rounded-full max-sm:rounded-none mx-2 md:mx-4 max-sm:mx-0 relative"
-      >
-        <!-- Desktop & Toggle Button -->
-        <div
-          class="flex items-center justify-between px-4 py-2 max-sm:py-0 md:py-3"
-        >
-          <!-- Hamburger button (visible on small screens) -->
-          <button
-            class="md:hidden text-white focus:outline-none"
-            onclick={() => (isOpen = !isOpen)}
-            aria-label="Toggle Menu"
-          >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-              />
-            </svg>
-          </button>
-
-          <!-- Nav Items (desktop) -->
-          <div class="hidden md:flex space-x-2 z-100">
-            {#each navItems as item}
-              <button
-                onclick={() => handleNavClick(item.key)}
-                class="px-4 py-2 text-sm font-medium text-white hover:text-blue-600 hover:bg-white rounded-full transition-all duration-300 whitespace-nowrap"
-              >
-                {item.label}
-              </button>
-            {/each}
-          </div>
-        </div>
-
-        <!-- Nav Items (mobile dropdown) -->
-        {#if isOpen}
-          <div
-            class="md:hidden flex flex-col items-center px-4 pb-4 space-y-2 animate-fade-in"
-          >
-            {#each navItems as item}
-              <button
-                onclick={() => handleNavClick(item.key)}
-                class="w-full text-center px-4 py-2 text-sm font-medium text-white hover:text-blue-600 hover:bg-white rounded-full transition-all duration-300"
-              >
-                {item.label}
-              </button>
-            {/each}
-          </div>
-        {/if}
-      </nav>
-    </div>
-
+  {#if $currentRoute === "/"}
     <!-- Hero Section -->
     <section
       bind:this={heroRef}
@@ -282,7 +225,7 @@
           <Mail size={36} class="max-sm:w-8 max-sm:h-8" />
         </button>
         <button
-          onclick={() => navigate("/rdv")}
+          on:click={() => navigate("/rdv")}
           class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
           <Calendar size={36} class="max-sm:w-8 max-sm:h-8" />
@@ -364,7 +307,7 @@
           <div
             class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
             style="background-image: url('service1.jpeg');"
-            onclick={() => openServiceModal("plomberie")}
+            on:click={() => openServiceModal("plomberie")}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"
@@ -393,7 +336,7 @@
           <div
             class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
             style="background-image: url('service2.jpeg');"
-            onclick={() => openServiceModal("chauffage")}
+            on:click={() => openServiceModal("chauffage")}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"
@@ -426,7 +369,7 @@
           <div
             class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
             style="background-image: url('service6.jpeg');"
-            onclick={() => openServiceModal("debouchage")}
+            on:click={() => openServiceModal("debouchage")}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"
@@ -456,7 +399,7 @@
           <div
             class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
             style="background-image: url('service4.jpeg');"
-            onclick={() => openServiceModal("ballon")}
+            on:click={() => openServiceModal("ballon")}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"
@@ -492,7 +435,7 @@
           <div
             class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
             style="background-image: url('service5.jpeg');"
-            onclick={() => openServiceModal("chaudiere")}
+            on:click={() => openServiceModal("chaudiere")}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"
@@ -526,7 +469,7 @@
           <div
             class="relative bg-cover bg-center bg-no-repeat rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-on-scroll cursor-pointer min-h-[300px]"
             style="background-image: url('service3.jpeg');"
-            onclick={() => openServiceModal("pompe")}
+            on:click={() => openServiceModal("pompe")}
           >
             <div
               class="absolute inset-0 bg-gradient-to-br from-black/70 to-black/50 rounded-lg"
@@ -637,7 +580,7 @@
     <!-- Service Details Modal -->
     {#if isModalOpen && selectedService}
       <div
-        class="fixed inset-0 bg-white/30 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in"
+        class="fixed inset-0 bg-white/30 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in"
         role="dialog"
         aria-modal="true"
       >
@@ -655,7 +598,7 @@
               <p class="text-gray-600">{selectedService.subtitle}</p>
             </div>
             <button
-              onclick={closeModal}
+              on:click={closeModal}
               class="text-gray-400 hover:text-gray-600 text-2xl font-bold transition-colors"
               aria-label="Close"
             >
@@ -705,7 +648,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
               <button
-                onclick={() => navigate("/rdv")}
+                on:click={() => navigate("/rdv")}
                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 Prendre rendez-vous
@@ -720,75 +663,40 @@
         </div>
       </div>
     {/if}
-  </div>
-{:else if $currentRoute === "/rdv"}
-  <RdvFlow />
-{:else}
-  <!-- 404 Page -->
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center">
-    <div class="text-center">
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">
-        404 - Page non trouvée
-      </h1>
-      <button
-        onclick={() => navigate("/")}
-        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Retour à l'accueil
-      </button>
+  {:else if $currentRoute === "/rdv"}
+    <RdvFlow />
+  {:else if $currentRoute === "/#/qui-sommes-nous"}
+    <Nous />
+  {:else if $currentRoute === "/#/nous-contacter"}
+    <Contact />
+  {:else if $currentRoute === "/#/cgv"}
+    <Cgv />
+  {:else if $currentRoute === "/#/nos-engagements"}
+    <Engagements />
+  {:else if $currentRoute === "/#/politique-confidentialite"}
+    <Politique />
+  {:else}
+    <!-- 404 Page -->
+    <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">
+          404 - Page non trouvée
+        </h1>
+        <button
+          on:click={() => navigate("/")}
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Retour à l'accueil
+        </button>
+      </div>
     </div>
-  </div>
-{/if}
+  {/if}
 
-<!-- Footer -->
-<footer class="bg-gray-800 text-white py-12">
-  <div class="container mx-auto px-4">
-    <div class="grid md:grid-cols-4 gap-8">
-      <div>
-        <h4 class="text-lg font-bold mb-4">FRD Services</h4>
-        <p class="text-gray-300">
-          Spécialiste du dépannage urgent en plomberie et chauffage.
-        </p>
-      </div>
-      <div>
-        <h4 class="text-lg font-bold mb-4">Services</h4>
-        <ul class="space-y-2 text-gray-300">
-          <li>Plomberie</li>
-          <li>Chauffage</li>
-          <li>Climatisation</li>
-          <li>Débouchage</li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-lg font-bold mb-4">Zones d'intervention</h4>
-        <ul class="space-y-2 text-gray-300">
-          <li>Île-de-France</li>
-          <li>Orléans (45)</li>
-          <li>Tours (37)</li>
-          <li>Caen (14)</li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-lg font-bold mb-4">Contact</h4>
-        <div class="space-y-2 text-gray-300">
-          <p>Urgences 24h/24</p>
-          <p>Devis gratuit</p>
-        </div>
-      </div>
-    </div>
-    <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-      <p>&copy; 2024 FRD Services. Tous droits réservés.</p>
-    </div>
-  </div>
-</footer>
+  <!-- Footer -->
+  <Footer />
+</div>
 
 <style>
-  footer {
-    position: relative !important;
-    z-index: 1000 !important;
-    background-color: #1f2937 !important;
-    min-height: 300px !important;
-  }
   @keyframes wave {
     0% {
       transform: translateY(10px);
