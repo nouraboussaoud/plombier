@@ -30,6 +30,12 @@
   let contentRef = $state();
   let heroRef = $state();
   let servicesRef = $state();
+  let galleryContainer = $state();
+  let galleryContainerGaz = $state();
+  let galleryContainerSalle = $state();
+  let galleryContainerAvant = $state();
+  let galleryContainerWc = $state();
+  let galleryContainerBb = $state();
 
   onMount(() => {
     const observer = new IntersectionObserver(
@@ -206,6 +212,48 @@
 
   function toggleMenu() {
     isOpen = !isOpen;
+  }
+
+  function scrollGallery(amount: number) {
+    if (galleryContainer) {
+      const container = galleryContainer as HTMLElement;
+      container.scrollLeft += amount;
+    }
+  }
+
+  function scrollGalleryGaz(amount: number) {
+    if (galleryContainerGaz) {
+      const container = galleryContainerGaz as HTMLElement;
+      container.scrollLeft += amount;
+    }
+  }
+
+  function scrollGallerySalle(amount: number) {
+    if (galleryContainerSalle) {
+      const container = galleryContainerSalle as HTMLElement;
+      container.scrollLeft += amount;
+    }
+  }
+
+  function scrollGalleryAvant(amount: number) {
+    if (galleryContainerAvant) {
+      const container = galleryContainerAvant as HTMLElement;
+      container.scrollLeft += amount;
+    }
+  }
+
+  function scrollGalleryWc(amount: number) {
+    if (galleryContainerWc) {
+      const container = galleryContainerWc as HTMLElement;
+      container.scrollLeft += amount;
+    }
+  }
+
+  function scrollGalleryBb(amount: number) {
+    if (galleryContainerBb) {
+      const container = galleryContainerBb as HTMLElement;
+      container.scrollLeft += amount;
+    }
   }
 </script>
 
@@ -667,6 +715,309 @@
       </div>
     </section>
 
+    <!-- First Gallery Section - Remplacement réseaux -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <!-- Title with centered orange underline -->
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">
+            Remplacement réseaux eaux usées, eaux vannes et eaux pluviales en fonte
+          </h2>
+          <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        </div>
+        
+        <!-- Gallery Container - Clean Design -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Arrows -->
+          <button 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGallery(-300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <!-- Gallery Images - Clean Design -->
+          <div bind:this={galleryContainer} class="flex overflow-x-auto gap-6 pb-4 scrollbar-hide px-12" id="gallery-container">
+            <!-- Images 1-25 -->
+            {#each Array(25) as _, i}
+              <div class="flex-shrink-0 w-72 h-56 rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`/gallery/${i+1}.jpg`}
+                  alt={`Remplacement réseau ${i+1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            {/each}
+          </div>
+          
+          <!-- Right Arrow -->
+          <button 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGallery(300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Divider line -->
+      <div class="max-w-6xl mx-auto mt-16 border-t border-gray-200"></div>
+    </section>
+
+    <!-- Second Gallery Section - Distribution réseaux -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <!-- Title with centered orange underline -->
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">
+            Distribution réseaux eau, gaz, air
+          </h2>
+          <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        </div>
+        
+        <!-- Gallery Container - Clean Design -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Arrows -->
+          <button 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryGaz(-300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <!-- Gallery Images - Clean Design -->
+          <div bind:this={galleryContainerGaz} class="flex overflow-x-auto gap-6 pb-4 scrollbar-hide px-12" id="gallery-container-gaz">
+            <!-- Images 1-17 from gaz folder -->
+            {#each Array(17) as _, i}
+              <div class="flex-shrink-0 w-72 h-56 rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`/gaz/${i+1}.jpg`}
+                  alt={`Distribution réseau ${i+1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            {/each}
+          </div>
+          
+          <!-- Right Arrow -->
+          <button 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryGaz(300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Third Gallery Section - Rénovation de salle de bain -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <!-- Title with centered orange underline -->
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">
+            Rénovation de salle de bain
+          </h2>
+          <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        </div>
+        
+        <!-- Gallery Container - Clean Design -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Arrows -->
+          <button 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGallerySalle(-300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <!-- Gallery Images - Clean Design -->
+          <div bind:this={galleryContainerSalle} class="flex overflow-x-auto gap-6 pb-4 scrollbar-hide px-12" id="gallery-container-salle">
+            <!-- Images 1-15 from salle folder -->
+            {#each Array(15) as _, i}
+              <div class="flex-shrink-0 w-72 h-56 rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`/salle/${i+1}.jpg`}
+                  alt={`Rénovation salle de bain ${i+1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            {/each}
+          </div>
+          
+          <!-- Right Arrow -->
+          <button 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGallerySalle(300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fourth Gallery Section - Rénovation de salle de bain avant/après -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <!-- Title with centered orange underline -->
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">
+            Rénovation de salle de bain avant/après
+          </h2>
+          <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        </div>
+        
+        <!-- Gallery Container - Clean Design -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Arrows -->
+          <button 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryAvant(-300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <!-- Gallery Images - Clean Design -->
+          <div bind:this={galleryContainerAvant} class="flex overflow-x-auto gap-6 pb-4 scrollbar-hide px-12" id="gallery-container-avant">
+            <!-- Images 1-16 from avant folder -->
+            {#each Array(16) as _, i}
+              <div class="flex-shrink-0 w-72 h-56 rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`/avant/${i+1}.jpg`}
+                  alt={`Rénovation salle de bain avant/après ${i+1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            {/each}
+          </div>
+          
+          <!-- Right Arrow -->
+          <button 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryAvant(300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fifth Gallery Section - Rénovation de salle de bain et WC -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <!-- Title with centered orange underline -->
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">
+            Rénovation de salle de bain et WC
+          </h2>
+          <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        </div>
+        
+        <!-- Gallery Container - Clean Design -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Arrows -->
+          <button 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryWc(-300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <!-- Gallery Images - Clean Design -->
+          <div bind:this={galleryContainerWc} class="flex overflow-x-auto gap-6 pb-4 scrollbar-hide px-12" id="gallery-container-wc">
+            <!-- Images 1-5 from wc folder -->
+            {#each Array(5) as _, i}
+              <div class="flex-shrink-0 w-72 h-56 rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`/wc/${i+1}.jpg`}
+                  alt={`Rénovation salle de bain et WC ${i+1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            {/each}
+          </div>
+          
+          <!-- Right Arrow -->
+          <button 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryWc(300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sixth Gallery Section - Remplacement de bouches de lavage -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <!-- Title with centered orange underline -->
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-4">
+            Remplacement de bouches de lavage sur les places de marché de la ville d'Issy-les-Moulineaux
+          </h2>
+          <div class="w-24 h-1 bg-orange-500 mx-auto"></div>
+        </div>
+        
+        <!-- Gallery Container - Clean Design -->
+        <div class="relative max-w-6xl mx-auto">
+          <!-- Navigation Arrows -->
+          <button 
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryBb(-300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <!-- Gallery Images - Clean Design -->
+          <div bind:this={galleryContainerBb} class="flex overflow-x-auto gap-6 pb-4 scrollbar-hide px-12" id="gallery-container-bb">
+            <!-- Images 1-12 from bb folder -->
+            {#each Array(12) as _, i}
+              <div class="flex-shrink-0 w-72 h-56 rounded-lg overflow-hidden shadow-md">
+                <img
+                  src={`/bb/${i+1}.jpg`}
+                  alt={`Remplacement de bouches de lavage ${i+1}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            {/each}
+          </div>
+          
+          <!-- Right Arrow -->
+          <button 
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 rounded-full p-3 shadow-md hover:bg-white transition-colors"
+            on:click={() => scrollGalleryBb(300)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <section class="bg-gradient-to-br from-gray-50 to-gray-100 py-16 mt-16">
       <div class="container mx-auto px-20 max-sm:px-4">
         <div
@@ -900,5 +1251,13 @@
 
   .parallax-bg {
     transform: translateY(calc(var(--scroll) * 0.5px));
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
   }
 </style>
