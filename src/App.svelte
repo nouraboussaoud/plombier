@@ -9,7 +9,8 @@
   } from "lucide-svelte";
   import { onMount } from "svelte";
   import { currentRoute, initRouter, navigate } from "./lib/router.js";
-
+  import { push } from "svelte-spa-router";
+  
   import Header from "./components/Header.svelte";
   import RdvFlow from "./components/RdvFlow.svelte";
   import Footer from "./components/Footer.svelte";
@@ -192,7 +193,7 @@
 
   function handleNavClick(key: string) {
     if (key === "rdv") {
-      navigate("/rdv");
+      push("/rdv");
     } else if (key in services) {
       openServiceModal(key);
     }
@@ -299,7 +300,7 @@
           <Mail size={36} class="max-sm:w-8 max-sm:h-8" />
         </button>
         <button
-          on:click={() => navigate("/rdv")}
+          on:click={() => push("/rdv")}
           class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
           <Calendar size={36} class="max-sm:w-8 max-sm:h-8" />
@@ -307,7 +308,7 @@
       </div>
       <div
         class="absolute left-8 top-3/4 transform translate-x-1/2 flex space-x-4 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:top-[70%] max-sm:flex-col max-sm:space-x-0 max-sm:space-y-2 max-sm:w-3/4"
-        on:click={() => navigate("/rdv")}
+        on:click={() => push("/rdv")}
       >
         <button
           class="p-3 bg-orange-600 hover:bg-orange-700 text-white rounded-4xl shadow-lg transition-all duration-300 flex items-center justify-center hover:scale-110 hover:shadow-xl max-sm:text-sm max-sm:p-2"
@@ -1164,7 +1165,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
               <button
-                on:click={() => navigate("/rdv")}
+                on:click={() => push("/rdv")}
                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 Prendre rendez-vous
@@ -1202,7 +1203,7 @@
           404 - Page non trouvée
         </h1>
         <button
-          on:click={() => navigate("/")}
+          on:click={() => push("/")}
           class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Retour à l'accueil

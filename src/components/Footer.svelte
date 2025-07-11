@@ -8,15 +8,15 @@
     // Footer links data
     const footerLinks = {
         FRD: [
-            { text: "Qui sommes-nous ?", page: "/#/qui-sommes-nous" },
-            { text: "Nous contacter", page: "/#/nous-contacter" },
-            { text: "Nos engagements", page: "/#/nos-engagements" },
-            { text: "CGV", page: "/#/cgv" },
+            { text: "Qui sommes-nous ?", page: "/qui-sommes-nous" },
+            { text: "Nous contacter", page: "/nous-contacter" },
+            { text: "Nos engagements", page: "/nos-engagements" },
+            { text: "CGV", page: "/cgv" },
             {
                 text: "Politique de confidentialité",
-                page: "/#/politique-confidentialite",
+                page: "/politique-confidentialite",
             },
-            { text: "Mentions légales", page: "/#/mentions-legales" },
+            { text: "Mentions légales", page: "/mentions-legales" },
         ],
         devis: [
             { text: "Devis chauffe-eau électrique", href: "#" },
@@ -38,7 +38,7 @@
         "Paris 75 (siège) | Melun (77) | Versailles (78) | Monthéry (91) | Saint-Maur-des-Fossés (94) | Caen (14) | Orléans (45) | Tours (37)";
 
     function navigateAndScrollToTop(page: string) {
-        navigate(page);
+        push(page); 
         setTimeout(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 100);
