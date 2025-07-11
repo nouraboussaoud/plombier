@@ -3,15 +3,14 @@
 </script>
 
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-  <header class="mb-8 sm:mb-12">
+  <header class="mb-8 sm:mb-12 bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-lg shadow-sm">
     <h1 class="text-3xl sm:text-4xl font-bold text-blue-600 mb-4">{title}</h1>
     <div class="w-16 sm:w-20 h-1 bg-orange-500 rounded"></div>
-    <p class="text-gray-600 mt-4 text-sm sm:text-base">Dernière mise à jour : 9 juillet 2025</p>
   </header>
 
   <div class="prose prose-sm sm:prose-lg max-w-none text-gray-700 leading-relaxed">
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">1. Champ d’application</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">1. Champ d'application</h2>
       <p>
         Les présentes Conditions Générales de Vente (ci-après « CGV ») s’appliquent, sans restriction ni réserve, aux interventions d’installation, de dépannage et de rénovation de plomberie sanitaire (ci-après les « Interventions »), proposées et réalisées par la société FRD SERVICES (ci-après le « Prestataire »), SASU au capital de 100,00 euros, dont le siège social est situé 3 Allée Marianske Lazne, 91460 Marcoussis, immatriculée au RCS d’Évry sous le numéro 988 076 014, auprès des clients non professionnels (ci-après le « Client »), souhaitant bénéficier des prestations proposées par FRD SERVICES.
       </p>
@@ -19,7 +18,7 @@
         Les présentes CGV précisent les conditions de demande d’intervention, de paiement, et de réalisation de la prestation commandée auprès du Prestataire.
       </p>
       <p>
-        Les présentes CGV sont systématiquement portées à la connaissance du Client via la rubrique CGV du site <a href="https://plombier-three.vercel.app" class="text-blue-600 hover:underline">https://plombier-three.vercel.app</a> et peuvent également être remises en main propre lors de toute Intervention. Elles prévalent, le cas échéant, sur tout autre document contradictoire.
+        Les présentes CGV sont systématiquement portées à la connaissance du Client via la rubrique CGV du site <a href="https://frdservices.fr" class="text-blue-600 hover:underline">FRD Services</a> et peuvent également être remises en main propre lors de toute Intervention. Elles prévalent, le cas échéant, sur tout autre document contradictoire.
       </p>
       <p>
         Toute demande d’intervention implique nécessairement l’acceptation sans réserve des présentes CGV par le Client, qui reconnaît en avoir pris connaissance.
@@ -32,8 +31,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">2. Commandes – Tarifs</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">2. Commandes – Tarifs</h2>
       <p>
         Le Client, préalablement à sa commande, déclare :
       </p>
@@ -57,9 +56,9 @@
         Le Client passe sa commande :
       </p>
       <ul class="list-disc pl-5">
-        <li>par téléphone au [numéro à compléter],</li>
-        <li>ou directement sur le site <a href="https://plombier-three.vercel.app" class="text-blue-600 hover:underline">https://plombier-three.vercel.app</a>,</li>
-        <li>ou par e-mail à [adresse e-mail à compléter].</li>
+        <li>par téléphone au 0755533226,</li>
+        <li>ou directement sur le site <a href="https://frdservices.fr" class="text-blue-600 hover:underline">FRD Services</a>,</li>
+        <li>ou par e-mail à <a href="mailto:Contact@frdservices.fr" class="text-blue-600 hover:underline">Contact@frdservices.fr</a>.</li>
       </ul>
       <p>
         Toute demande d’Intervention donne lieu à l’établissement préalable d’un devis, lequel peut être régularisé et signé par le Client au moment de l’intervention en cas d’urgence.
@@ -93,8 +92,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">3. Conditions de règlement</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">3. Conditions de règlement</h2>
       <p>
         Un acompte correspondant à 50% du prix total des Interventions commandées est exigé lors de la commande par le Client. Cet acompte ne pourra en aucun cas être qualifié d’arrhes.
       </p>
@@ -125,8 +124,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">4. Réalisation des Interventions</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">4. Réalisation des Interventions</h2>
       <p>
         Le Prestataire exécute ses Interventions d’installation, de dépannage et de rénovation sanitaire au domicile du client particulier pendant les jours et heures d’ouverture de FRD SERVICES.
       </p>
@@ -156,8 +155,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">5. Responsabilité du Prestataire – Garantie</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">5. Responsabilité du Prestataire – Garantie</h2>
       <p>
         Le Prestataire garantit le Client, conformément aux dispositions légales et sans paiement complémentaire, contre tout défaut de conformité ou vice caché, provenant d’un défaut de réalisation de l’Intervention commandée. Le matériel fourni et installé par FRD SERVICES ne comprend en revanche que la seule garantie du constructeur ou fabricant ; la responsabilité du Prestataire ne pouvant alors nullement être engagée.
       </p>
@@ -178,8 +177,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">6. Clause de réserve de propriété</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">6. Clause de réserve de propriété</h2>
       <p>
         Le matériel fourni par FRD SERVICES reste sa propriété jusqu'au paiement complet et effectif du prix à l’échéance par le Client. La présente clause de réserve de propriété ne fait pas obstacle au transfert des risques du matériel au Client dès la livraison.
       </p>
@@ -188,8 +187,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">7. Droit de rétractation</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">7. Droit de rétractation</h2>
       <p>
         Conformément aux articles L.221-18 à L.221-28 du Code de la consommation, sauf en cas d’intervention urgente, le Client bénéficie d’un droit de rétractation d’une durée de 14 jours à compter de l’acceptation et de la signature du bon de commande.
       </p>
@@ -207,8 +206,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">8. Imprévision</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">8. Imprévision</h2>
       <p>
         En cas de changement de circonstances imprévisibles lors de la conclusion du contrat, conformément aux dispositions de l’article 1195 du Code civil, la Partie qui n’a pas accepté d’assumer un risque d’exécution excessivement onéreuse peut demander une renégociation du contrat à son cocontractant.
       </p>
@@ -217,8 +216,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">9. Exécution forcée</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">9. Exécution forcée</h2>
       <p>
         En cas de manquement de l’une ou l’autre des Parties à ses obligations, la Partie victime de la défaillance dispose du droit de requérir l’exécution forcée en nature des obligations découlant des présentes.
       </p>
@@ -230,8 +229,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">10. Exception d’inexécution</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">10. Exception d’inexécution</h2>
       <p>
         Il est rappelé qu’en application de l’article 1219 du Code civil, chaque Partie pourra refuser d’exécuter son obligation, alors même que celle-ci est exigible, si l’autre Partie n’exécute pas la sienne et si cette inexécution est suffisamment grave, c’est-à-dire, susceptible de remettre en cause la poursuite du contrat ou de bouleverser fondamentalement son équilibre économique. La suspension d’exécution prendra effet immédiatement, à réception, par la Partie défaillante, de la notification de manquement qui lui aura été adressée à cet effet indiquant l’intention de faire application de l’exception d’inexécution tant que la Partie défaillante n’aura pas remédié au manquement constaté, signifiée par lettre recommandée avec demande d’avis de réception ou sur tout autre support durable écrit permettant de ménager une preuve de l’envoi.
       </p>
@@ -249,8 +248,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">11. Force majeure</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">11. Force majeure</h2>
       <p>
         FRD SERVICES et le Client ne pourront être tenus pour responsables si la non-exécution ou le retard dans l’exécution de l’une quelconque de leurs obligations, telles que décrites dans les présentes, découle d’un cas de force majeure. À ce titre, la force majeure s’entend de tout événement imprévisible et irrésistible au sens de l’article 1218 du Code civil.
       </p>
@@ -268,8 +267,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">12. Résolution du contrat</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">12. Résolution du contrat</h2>
       <p>
         En cas d’impossibilité d’exécution d’une obligation devenue excessivement onéreuse, de force majeure ou d’inexécution de ses obligations par l’une des Parties, le présent contrat sera résolu de plein droit au profit de l’autre Partie, sans préjudice des dommages et intérêts qui pourraient être réclamés à la Partie défaillante.
       </p>
@@ -278,8 +277,8 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">13. Protection des données personnelles</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">13. Protection des données personnelles</h2>
       <p>
         En application de la loi 78-17 du 6 janvier 1978 modifiée par la loi n°2018-493 du 20 juin 2018, il est rappelé que les données nominatives demandées au Client sont nécessaires au traitement de sa commande et à la réalisation de l’Intervention par FRD SERVICES.
       </p>
@@ -289,35 +288,35 @@
       <p>
         Ce droit peut être exercé en adressant une demande écrite à l’adresse suivante :
       </p>
-      <p>
+      <p class="bg-gray-50 p-4 rounded border-l-4 border-blue-500">
         📍 FRD SERVICES – 3 Allée Marianske Lazne, 91460 Marcoussis<br>
-        📧 ou par email à : [adresse e-mail à compléter]
+        📧 ou par email à : <a href="mailto:Contact@frdservices.fr" class="text-blue-600 hover:underline">Contact@frdservices.fr</a>
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">14. Droit applicable</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">14. Droit applicable</h2>
       <p>
         De convention expresse entre les parties, les présentes Conditions Générales de Vente (CGV) et les opérations qui en découlent sont régies par et soumises au droit français. Les présentes CGV sont donc rédigées en langue française. Toute traduction éventuelle n’a qu’une valeur informative.
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">15. Litiges</h2>
-      <p>
-        TOUS LES LITIGES AUXQUELS LES OPÉRATIONS D’ACHAT ET DE VENTE CONCLUES EN APPLICATION DES PRÉSENTES CGV POURRAIENT DONNER LIEU, CONCERNANT TANT LEUR VALIDITÉ, LEUR INTERPRÉTATION, LEUR EXÉCUTION, LEUR RÉSILIATION, LEURS CONSÉQUENCES ET LEURS SUITES ET QUI N’AURAIENT PAS PU ÊTRE RÉSOLUS À L’AMIABLE ENTRE FRD SERVICES ET LE CLIENT, SERONT SOUMIS AUX TRIBUNAUX COMPÉTENTS DANS LES CONDITIONS DE DROIT COMMUN.
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">15. Litiges</h2>
+      <p class="font-medium">
+        TOUS LES LITIGES AUXQUELS LES OPÉRATIONS D'ACHAT ET DE VENTE CONCLUES EN APPLICATION DES PRÉSENTES CGV POURRAIENT DONNER LIEU, CONCERNANT TANT LEUR VALIDITÉ, LEUR INTERPRÉTATION, LEUR EXÉCUTION, LEUR RÉSILIATION, LEURS CONSÉQUENCES ET LEURS SUITES ET QUI N'AURAIENT PAS PU ÊTRE RÉSOLUS À L'AMIABLE ENTRE FRD SERVICES ET LE CLIENT, SERONT SOUMIS AUX TRIBUNAUX COMPÉTENTS DANS LES CONDITIONS DE DROIT COMMUN.
       </p>
       <p>
         Le Client est informé qu’il peut en tout état de cause recourir à une médiation conventionnelle, notamment auprès de la Commission de la médiation de la consommation ou auprès des instances de médiation sectorielles existantes, ou à tout mode alternatif de règlement des différends en cas de contestation.
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">16. Acceptation du Client</h2>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">16. Acceptation du Client</h2>
       <p>
         Le Client reconnaît avoir eu communication, préalablement à la passation de sa commande et à la validation du devis y afférent le cas échéant, d’une manière claire et compréhensible, des présentes CGV et de toutes les informations listées à l’article L.221-5 du Code de la consommation, et notamment les informations suivantes :
       </p>
-      <ul class="list-disc pl-5">
+      <ul class="list-disc pl-5 bg-gray-50 p-4 rounded">
         <li>les caractéristiques essentielles de l’Intervention,</li>
         <li>le prix de l’Intervention et des frais annexes,</li>
         <li>la date ou le délai dans lequel le Prestataire s’engage à réaliser l’Intervention commandée,</li>
@@ -330,12 +329,18 @@
       </p>
     </section>
 
-    <section class="mb-6 sm:mb-8">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">17. Coordonnées de FRD SERVICES</h2>
-      <p>
-        FRD SERVICES : 3 Allée Marianske Lazne, 91460 Marcoussis – Tél : [numéro à compléter] – E-mail : [adresse e-mail à compléter]<br>
-        SIRET : 98807601400017 – APE : 43.22A – N° TVA : [à compléter]
-      </p>
+    <section class="mb-6 sm:mb-8 bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">17. Coordonnées de FRD SERVICES</h2>
+      <div class="bg-blue-50 p-5 rounded-lg border border-blue-100">
+        <p class="flex flex-col space-y-2">
+          <span><strong>FRD SERVICES :</strong> 3 Allée Marianske Lazne, 91460 Marcoussis</span>
+          <span><strong>Tél :</strong> 0755533226</span>
+          <span><strong>E-mail :</strong> <a href="mailto:Contact@frdservices.fr" class="text-blue-600 hover:underline">Contact@frdservices.fr</a></span>
+          <span><strong>SIRET :</strong> 98807601400017</span>
+          <span><strong>APE :</strong> 43.22A</span>
+          <span><strong>N° TVA :</strong> FR10988076014</span>
+        </p>
+      </div>
     </section>
   </div>
 </div>

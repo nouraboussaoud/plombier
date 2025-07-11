@@ -790,12 +790,6 @@
   });
 </script>
 
-<button
-  onclick={() => navigate("/")}
-  class="px-10 py-2 border border-gray-300 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-gray-50 hover:text-gray-800"
->
-  ← Accueil
-</button>
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
   <!-- Progress Bar -->
 

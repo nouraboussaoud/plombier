@@ -35,7 +35,7 @@
           </div>
           <div>
             <h3 class="font-semibold text-gray-800">Téléphone</h3>
-            <p class="text-xl font-bold text-blue-600">01 89 71 61 22</p>
+            <p class="text-xl font-bold text-blue-600">0755533226</p>
             <p class="text-sm text-gray-600">Disponible 24h/24 pour les urgences</p>
           </div>
         </div>
@@ -49,7 +49,7 @@
           </div>
           <div>
             <h3 class="font-semibold text-gray-800">Email</h3>
-            <p class="text-blue-600">contact@FRD.fr</p>
+            <p class="text-blue-600">Contact@frdservices.fr</p>
           </div>
         </div>
 
@@ -61,7 +61,7 @@
           </div>
           <div>
             <h3 class="font-semibold text-gray-800">Adresse</h3>
-            <p class="text-gray-700">[Votre adresse principale]</p>
+            <p class="text-gray-700">3 Allée Marianske Lazne, 91460 Marcoussis</p>
           </div>
         </div>
       </div>
