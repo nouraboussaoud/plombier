@@ -1,11 +1,10 @@
 <script lang="ts">
     import { navigate } from "../lib/router";
 
-
-  export let navItems: Array<{ label: string; key: string }>;
-  export let handleNavClick: (key: string) => void;
-  export let isOpen: boolean;
-  export let toggleMenu: () => void;
+    export let navItems: Array<{ label: string; key: string }>;
+    export let handleNavClick: (key: string) => void;
+    export let isOpen: boolean;
+    export let toggleMenu: () => void;
 
 </script>
 

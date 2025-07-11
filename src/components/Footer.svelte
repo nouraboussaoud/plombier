@@ -3,8 +3,7 @@
     import { navigate } from "../lib/router";
     import Nous from "./Nous.svelte";
     import App from "../App.svelte";
-    import { push } from "svelte-spa-router";
-
+    
     // Footer links data
     const footerLinks = {
         FRD: [
@@ -38,7 +37,8 @@
         "Paris 75 (siège) | Melun (77) | Versailles (78) | Monthéry (91) | Saint-Maur-des-Fossés (94) | Caen (14) | Orléans (45) | Tours (37)";
 
     function navigateAndScrollToTop(page: string) {
-        push(page); 
+        // Add hash to match the route format in App.svelte
+        navigate("/#" + page);
         setTimeout(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 100);
@@ -50,11 +50,18 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 100);
     }
+    
+    function navigateToHome() {
+        navigate("/");
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+    }
 </script>
 
 <footer class="bg-blue-500 text-white py-8">
-  <div class="container mx-auto px-8">
-    <div class="grid grid-cols-4 gap-8">
+  <div class="container mx-auto px-8 max-sm:px-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
       <!-- Column 1: Logo and Contact Info -->
       <div>
         <div class="bg-white rounded-lg p-4 mb-6">
@@ -90,7 +97,7 @@
         <ul class="space-y-2">
           <li>
             <button
-              on:click={() => navigateAndScrollToTop("/#/qui-sommes-nous")}
+              on:click={() => navigateAndScrollToTop("/qui-sommes-nous")}
               class="text-white hover:underline text-sm"
             >
               Qui sommes-nous ?
@@ -98,7 +105,7 @@
           </li>
           <li>
             <button
-              on:click={() => navigateAndScrollToTop("/#/nous-contacter")}
+              on:click={() => navigateAndScrollToTop("/nous-contacter")}
               class="text-white hover:underline text-sm"
             >
               Nous contacter
@@ -106,7 +113,7 @@
           </li>
           <li>
             <button
-              on:click={() => navigateAndScrollToTop("/#/nos-engagements")}
+              on:click={() => navigateAndScrollToTop("/nos-engagements")}
               class="text-white hover:underline text-sm"
             >
               Nos engagements
@@ -114,7 +121,7 @@
           </li>
           <li>
             <button
-              on:click={() => navigateAndScrollToTop("/#/cgv")}
+              on:click={() => navigateAndScrollToTop("/cgv")}
               class="text-white hover:underline text-sm"
             >
               CGV
@@ -122,7 +129,7 @@
           </li>
           <li>
             <button
-              on:click={() => navigateAndScrollToTop("/#/politique-confidentialite")}
+              on:click={() => navigateAndScrollToTop("/politique-confidentialite")}
               class="text-white hover:underline text-sm"
             >
               Politique de confidentialité
@@ -130,7 +137,7 @@
           </li>
           <li>
             <button
-              on:click={() => navigateAndScrollToTop("/#/mentions-legales")}
+              on:click={() => navigateAndScrollToTop("/mentions-legales")}
               class="text-white hover:underline text-sm"
             >
               Mentions légales

@@ -39,6 +39,8 @@
   let galleryContainerBb = $state();
 
   onMount(() => {
+    initRouter();
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -193,7 +195,7 @@
 
   function handleNavClick(key: string) {
     if (key === "rdv") {
-      push("/rdv");
+      navigate("/rdv");
     } else if (key in services) {
       openServiceModal(key);
     }
@@ -300,7 +302,7 @@
           <Mail size={36} class="max-sm:w-8 max-sm:h-8" />
         </button>
         <button
-          on:click={() => push("/rdv")}
+          on:click={() => navigate("/rdv")}
           class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
           <Calendar size={36} class="max-sm:w-8 max-sm:h-8" />
@@ -1165,7 +1167,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
               <button
-                on:click={() => push("/rdv")}
+                on:click={() => navigate("/rdv")}
                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 Prendre rendez-vous
