@@ -56,7 +56,7 @@
         Le Client passe sa commande :
       </p>
       <ul class="list-disc pl-5">
-        <li>par téléphone au 0755533226,</li>
+        <li>par téléphone au +33 7 45 88 08 62,</li>
         <li>ou directement sur le site <a href="https://frdservices.fr" class="text-blue-600 hover:underline">FRD Services</a>,</li>
         <li>ou par e-mail à <a href="mailto:Contact@frdservices.fr" class="text-blue-600 hover:underline">Contact@frdservices.fr</a>.</li>
       </ul>
@@ -334,7 +334,7 @@
       <div class="bg-blue-50 p-5 rounded-lg border border-blue-100">
         <p class="flex flex-col space-y-2">
           <span><strong>FRD SERVICES :</strong> 3 Allée Marianske Lazne, 91460 Marcoussis</span>
-          <span><strong>Tél :</strong> 0755533226</span>
+          <span><strong>Tél :</strong> +33 7 45 88 08 62</span>
           <span><strong>E-mail :</strong> <a href="mailto:Contact@frdservices.fr" class="text-blue-600 hover:underline">Contact@frdservices.fr</a></span>
           <span><strong>SIRET :</strong> 98807601400017</span>
           <span><strong>APE :</strong> 43.22A</span>

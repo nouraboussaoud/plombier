@@ -1256,8 +1256,10 @@
                 <button
                   class="px-8 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg font-semibold transition-colors flex items-center justify-center"
                 >
-                  <Phone class="w-5 h-5 mr-2" />
-                  Appeler maintenant
+                  <a href="tel:+33745880862">
+                    <Phone class="w-5 h-5 mr-2" />
+                    Appeler maintenant
+                  </a>
                 </button>
               </div>
 
@@ -1493,8 +1495,10 @@
                 <button
                   class="px-8 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg font-semibold transition-colors flex items-center justify-center"
                 >
-                  <Phone class="w-5 h-5 mr-2" />
-                  Appeler maintenant
+                  <a href="tel:+33745880862">
+                    <Phone class="w-5 h-5 mr-2" />
+                    Appeler maintenant
+                  </a>
                 </button>
               </div>
             </div>

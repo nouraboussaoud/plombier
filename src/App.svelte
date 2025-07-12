@@ -291,7 +291,7 @@
         class="absolute left-8 top-1/2 transform -translate-y-1/2 space-y-4 max-sm:left-1/6 max-sm:-translate-x-1/2 max-sm:top-1/3 max-sm:space-y-2"
       >
         <a
-          href="tel:0755533226"
+          href="tel:+33745880862"
           class="w-18 h-18 text-orange-600 hover:text-orange-700 transition-all duration-300 flex items-center justify-center hover:scale-110 max-sm:w-12 max-sm:h-12"
         >
           <Phone size={36} class="max-sm:w-8 max-sm:h-8" />
@@ -1173,7 +1173,7 @@
                 Prendre rendez-vous
               </button>
               <a
-                href="tel:0755533226"
+                href="tel:+33745880862"
                 class="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors text-center"
               >
                 Appeler maintenant

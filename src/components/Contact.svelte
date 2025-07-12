@@ -35,7 +35,7 @@
           </div>
           <div>
             <h3 class="font-semibold text-gray-800">Téléphone</h3>
-            <p class="text-xl font-bold text-blue-600">0755533226</p>
+            <p class="text-xl font-bold text-blue-600">+33 7 45 88 08 62</p>
             <p class="text-sm text-gray-600">Disponible 24h/24 pour les urgences</p>
           </div>
         </div>

@@ -79,7 +79,9 @@
 
         <div class="mb-6">
           <p class="text-sm mb-1">Contactez-nous au</p>
-          <p class="text-xl font-bold">0755533226</p>
+          <p class="text-xl font-bold">
+            <a href="tel:+33745880862">+33 7 45 88 08 62</a>
+          </p>
         </div>
 
         <div class="mb-6">
