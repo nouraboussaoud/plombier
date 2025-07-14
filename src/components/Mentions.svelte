@@ -18,7 +18,7 @@
           <span>SIRET : 988 076 014 00019</span>
           <span>TVA intracommunautaire : FR10988076014</span>
           <span>Siège social : 3 Allée Marianske Lazne, 91460 Marcoussis – France</span>
-          <span>Téléphone : 0755533226</span>
+          <span>Téléphone : +33 7 45 88 08 62</span>
           <span>E-mail : <a href="mailto:Contact@frdservices.fr" class="text-blue-600 hover:underline">Contact@frdservices.fr</a></span>
           <span>Directeur de publication : Ferdaws MARZOUGUI</span>
           <span>Site internet : <a href="https://frdservices.fr" class="text-blue-600 hover:underline">FRD Services</a></span>
