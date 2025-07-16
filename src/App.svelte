@@ -16,7 +16,7 @@
   import Footer from "./components/Footer.svelte";
   import Nous from "./components/Nous.svelte";
   import Contact from "./components/Contact.svelte";
-  import CGV from "./components/CGV.svelte";
+  import Cgv from "./components/CGV.svelte";
   import Engagements from "./components/Engagements.svelte";
   import Politique from "./components/Politique.svelte";
   import Mentions from "./components/Mentions.svelte";
@@ -1189,13 +1189,13 @@
     <Nous />
   {:else if $currentRoute === "/#/nous-contacter"}
     <Contact />
-  {:else if $currentRoute === "/cgv" || $currentRoute === "/#/cgv"}
-    <CGV />
+  {:else if $currentRoute === "/#/cgv"}
+    <Cgv />
   {:else if $currentRoute === "/#/nos-engagements"}
     <Engagements />
   {:else if $currentRoute === "/#/politique-confidentialite"}
     <Politique />
-  {:else if $currentRoute === "/mentions-legales" || $currentRoute === "/#/mentions-legales"}
+  {:else if $currentRoute === "/#/mentions-legales"}
     <Mentions />
   {:else}
     <!-- 404 Page -->
