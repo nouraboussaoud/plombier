@@ -37,8 +37,12 @@
         "Paris 75 (siège) | Melun (77) | Versailles (78) | Monthéry (91) | Saint-Maur-des-Fossés (94) | Caen (14) | Orléans (45) | Tours (37)";
 
     function navigateAndScrollToTop(page: string) {
-        // Add hash to match the route format in App.svelte
-        navigate("/#" + page);
+        // Remove hash for legal pages to make them accessible via direct URLs
+        if (page === "/cgv" || page === "/mentions-legales") {
+            navigate(page);
+        } else {
+            navigate("/#" + page);
+        }
         setTimeout(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 100);

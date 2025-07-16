@@ -1189,13 +1189,13 @@
     <Nous />
   {:else if $currentRoute === "/#/nous-contacter"}
     <Contact />
-  {:else if $currentRoute === "/#/cgv"}
+  {:else if $currentRoute === "/cgv" || $currentRoute === "/#/cgv"}
     <Cgv />
   {:else if $currentRoute === "/#/nos-engagements"}
     <Engagements />
   {:else if $currentRoute === "/#/politique-confidentialite"}
     <Politique />
-  {:else if $currentRoute === "/#/mentions-legales"}
+  {:else if $currentRoute === "/mentions-legales" || $currentRoute === "/#/mentions-legales"}
     <Mentions />
   {:else}
     <!-- 404 Page -->
