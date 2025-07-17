@@ -1,47 +1,103 @@
-# Svelte + TS + Vite
+# Plombier - Plumbing Service Booking App
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+A modern web application for booking plumbing services with integrated PayPal payments, built with Svelte, TypeScript, and Vite.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+- Service booking flow (Dépannage, Installation, Entretien)
+- Dynamic pricing calculation
+- PayPal payment integration
+- Responsive design with Tailwind CSS
+- Supabase backend integration
 
-## Need an official Svelte framework?
+## Environment Setup
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+### Local Development
 
-## Technical considerations
-
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+1. Copy the environment example file:
+```bash
+cp .env.example .env.local
 ```
+
+2. Update `.env.local` with your actual PayPal Client ID:
+```
+VITE_PAYPAL_CLIENT_ID=your_actual_paypal_client_id_here
+```
+
+### Production Deployment on Vercel
+
+1. **Push your code to GitHub** (make sure `.env.local` is not committed)
+
+2. **Deploy to Vercel:**
+   - Connect your GitHub repository to Vercel
+   - Or use Vercel CLI: `vercel --prod`
+
+3. **Set Environment Variables in Vercel:**
+   - Go to your Vercel project dashboard
+   - Navigate to Settings → Environment Variables
+   - Add the following variable:
+     - **Name:** `VITE_PAYPAL_CLIENT_ID`
+     - **Value:** Your PayPal Client ID (e.g., `AY8Fd1RgX98ZYcJMBxAWPFIpsMaJCKWfBfS4g6pNjpSLSXzzjAIvm85SHBeJMhGwcAo9yJJBFZSZYobl`)
+     - **Environment:** Production (and Preview if needed)
+
+4. **Redeploy** your application after setting the environment variables
+
+## PayPal Configuration
+
+### Getting PayPal Client ID
+
+1. Go to [PayPal Developer Dashboard](https://developer.paypal.com/)
+2. Create a new app or use existing one
+3. Copy the Client ID from your app settings
+4. For production, make sure to use the Live Client ID (not Sandbox)
+
+### Environment Variables
+
+- `VITE_PAYPAL_CLIENT_ID`: Your PayPal application's Client ID
+
+**Important:** Never commit your actual PayPal Client ID to version control. Always use environment variables.
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Deployment Checklist
+
+- [ ] PayPal Client ID moved to environment variables
+- [ ] Environment variables set in Vercel dashboard
+- [ ] Code pushed to GitHub
+- [ ] Vercel deployment successful
+- [ ] PayPal payments working in production
+
+## Technical Stack
+
+- **Frontend:** Svelte 5 + TypeScript
+- **Styling:** Tailwind CSS
+- **Build Tool:** Vite
+- **Backend:** Supabase
+- **Payments:** PayPal SDK
+- **Deployment:** Vercel
+
+## Troubleshooting
+
+### PayPal Not Loading
+- Check that `VITE_PAYPAL_CLIENT_ID` is set correctly
+- Verify the Client ID is for the correct environment (Live vs Sandbox)
+- Check browser console for errors
+
+### Environment Variables Not Working
+- Make sure environment variable names start with `VITE_`
+- Restart development server after changing `.env.local`
+- For Vercel, redeploy after setting environment variables

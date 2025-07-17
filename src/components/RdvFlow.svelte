@@ -20,6 +20,11 @@
   } from "lucide-svelte";
   import { navigate } from "../lib/router.js";
   import { supabase } from "../lib/supabase.js";
+  import { onMount } from "svelte";
+
+  interface Window {
+    paypal: any;
+  }
 
   let currentStep = $state(1);
   let selectedServiceType = $state("");
@@ -42,6 +47,11 @@
   let isSubmitting = $state(false);
   let isSubmitted = $state(false);
   let submitMessage = $state("");
+  let paymentError = $state("");
+
+  // PayPal payment state
+  let paymentId = $state("");
+  let paymentStatus = $state("");
 
   // Get today's date in YYYY-MM-DD format for date input
   const today = new Date().toISOString().split("T")[0];
@@ -606,11 +616,11 @@
       if (problems.length > 0) {
         currentStep = 3; // Go to problem selection
       } else {
-        currentStep = 6; // Go directly to house age question
+        currentStep = 6; // Go to house age question
       }
     } else {
-      // For installation and entretien, go directly to summary
-      currentStep = 30; // Go to summary
+      // For installation and entretien, go directly to payment
+      currentStep = 30; // Go to payment
     }
   }
 
@@ -644,11 +654,15 @@
 
   function handleHouseAgeSelect(age: string) {
     houseAge = age;
-    currentStep = 7; // Go to summary
+    currentStep = 7; // Go to payment
   }
 
   function goToContactForm() {
-    currentStep = 8;
+    if (paymentId && paymentStatus === "COMPLETED") {
+      currentStep = 8;
+    } else {
+      paymentError = "Veuillez compléter le paiement avant de continuer.";
+    }
   }
 
   async function submitAppointment() {
@@ -675,6 +689,9 @@
         message: contactData.message,
         status: "pending",
         created_at: new Date().toISOString(),
+        payment_id: paymentId,
+        payment_status: paymentStatus,
+        payment_amount: calculatePrice(),
       };
 
       const { data, error } = await supabase
@@ -722,7 +739,7 @@
       } else if (currentStep === 10 || currentStep === 20) {
         currentStep = 1; // Back to service type selection
       } else if (currentStep === 30) {
-        // Back from summary
+        // Back from payment
         if (selectedServiceType === "depannage") {
           currentStep = 2;
         } else if (selectedServiceType === "installation") {
@@ -745,6 +762,9 @@
     hasSanibroyeur = "";
     wcType = "";
     houseAge = "";
+    paymentId = "";
+    paymentStatus = "";
+    paymentError = "";
     contactData = {
       firstName: "",
       lastName: "",
@@ -788,11 +808,102 @@
     if (selectedServiceType === "entretien") return entretienCategories;
     return [];
   });
+
+  // PayPal script loader and button initialization
+  let paypalLoaded = $state(false);
+  let paypalButtonsRendered = $state(false);
+  
+  onMount(() => {
+    const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+
+    if (!paypalClientId) {
+      console.error('PayPal Client ID not found in environment variables');
+      paymentError = "Configuration PayPal manquante. Veuillez contacter le support.";
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=EUR`;
+    script.async = true;
+    script.onload = () => {
+      paypalLoaded = true;
+    };
+    script.onerror = () => {
+      console.error('Failed to load PayPal SDK');
+      paymentError = "Erreur de chargement PayPal. Veuillez rafraîchir la page.";
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  });
+
+  // PayPal buttons effect
+  $effect(() => {
+    if (paypalLoaded && (currentStep === 7 || currentStep === 30) && calculatePrice()) {
+      // Clear existing buttons
+      const container = document.getElementById("paypal-button-container");
+      if (container) {
+        container.innerHTML = "";
+        
+        // Get current service details
+        const amount = calculatePrice();
+        let serviceDescription = "";
+        
+        if (selectedServiceType === "depannage") {
+          const categoryName = depannageCategories.find(c => c.id === selectedCategory)?.name || "";
+          const problemName = selectedProblemData?.name || "";
+          serviceDescription = `Dépannage ${categoryName} - ${problemName}`;
+        } else if (selectedServiceType === "installation") {
+          const categoryName = installationCategories.find(c => c.id === selectedCategory)?.name || "";
+          const typeName = installationTypes.find(t => t.id === selectedSubCategory)?.name || "";
+          serviceDescription = `Installation ${typeName} - ${categoryName}`;
+        } else if (selectedServiceType === "entretien") {
+          const categoryName = entretienCategories.find(c => c.id === selectedCategory)?.name || "";
+          serviceDescription = `Contrat d'entretien - ${categoryName}`;
+        }
+
+        (window as any).paypal.Buttons({
+          createOrder: (_data: any, actions: any) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: amount?.toString() || "0",
+                    currency_code: "EUR",
+                  },
+                  description: serviceDescription,
+                },
+              ],
+            });
+          },
+          onApprove: async (_data: any, actions: any) => {
+            try {
+              const details = await actions.order.capture();
+              paymentId = details.id;
+              paymentStatus = details.status;
+              paymentError = "";
+              goToContactForm();
+            } catch (error) {
+              console.error("Payment capture error:", error);
+              paymentError = "Erreur lors du paiement. Veuillez réessayer.";
+            }
+          },
+          onError: (err: any) => {
+            console.error("PayPal error:", err);
+            paymentError = "Une erreur est survenue avec PayPal. Veuillez réessayer.";
+          },
+        }).render("#paypal-button-container");
+        
+        paypalButtonsRendered = true;
+      }
+    }
+  });
 </script>
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
   <!-- Progress Bar -->
-
   {#if !isSubmitted}
     <div class="bg-white border-b max-sm:hidden">
       <div class="container mx-auto px-4 py-4">
@@ -848,7 +959,7 @@
                   <div
                     class="w-16 h-16 {service.color} rounded-full flex items-center justify-center mx-auto mb-4"
                   >
-                    <service.icon class="w-8 h-8 text-white" />
+                    <svelte:component this={service.icon} class="w-8 h-8 text-white" />
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 mb-2">
                     {service.name}
@@ -1132,7 +1243,7 @@
         </div>
       {/if}
 
-      <!-- Step 7: Dépannage Summary -->
+      <!-- Step 7: Dépannage Payment -->
       {#if currentStep === 7}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
           <div
@@ -1142,7 +1253,7 @@
               class="text-3xl font-bold text-center flex items-center justify-center"
             >
               <CheckCircle class="w-8 h-8 mr-3" />
-              Récapitulatif de votre demande
+              Paiement de votre intervention
             </h2>
           </div>
           <div class="p-8">
@@ -1206,52 +1317,50 @@
                 </div>
               </div>
 
-              <!-- Price Estimation -->
+              <!-- Payment Amount -->
               <div class="bg-green-50 rounded-lg p-6 mb-6">
-                <h3 class="text-xl font-bold text-green-800 mb-4">Prix TTC</h3>
+                <h3 class="text-xl font-bold text-green-800 mb-4">
+                  Montant à payer
+                </h3>
                 <div class="text-center">
-                  <div class="text-4xl font-bold text-green-600 mb-2">
-                    {calculatePrice()}€
-                  </div>
-                  <p class="text-gray-600">Prix estimé pour l'intervention</p>
+                  {#if calculatePrice()}
+                    <div class="text-4xl font-bold text-green-600 mb-2">
+                      {calculatePrice()}€
+                    </div>
+                    <p class="text-gray-600">Montant total TTC pour l'intervention</p>
+                  {:else}
+                    <div class="text-2xl font-bold text-orange-600 mb-2">
+                      Sur devis
+                    </div>
+                    <p class="text-gray-600">
+                      Paiement après confirmation du devis
+                    </p>
+                  {/if}
                 </div>
               </div>
 
-              <!-- What's included -->
-              <div
-                class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8"
-              >
-                <h4 class="font-bold text-yellow-800 mb-3">
-                  💡 Cette estimation inclut :
-                </h4>
-                <ul class="text-sm text-yellow-700 space-y-2">
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Déplacement et diagnostic
-                  </li>
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Main d'œuvre qualifiée
-                  </li>
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Petites fournitures courantes
-                  </li>
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Garantie intervention
-                  </li>
-                </ul>
-              </div>
+              <!-- PayPal Button -->
+              {#if paypalLoaded && calculatePrice()}
+                <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+                  <h3 class="text-xl font-bold text-yellow-800 mb-4">
+                    Payer avec PayPal
+                  </h3>
+                  <div id="paypal-button-container" class="mt-4"></div>
+                  {#if paymentError}
+                    <p class="text-red-600 mt-2">{paymentError}</p>
+                  {/if}
+                </div>
+              {/if}
 
               <!-- Action Buttons -->
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onclick={goToContactForm}
-                  class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center"
+                  disabled={!paymentId || paymentStatus !== "COMPLETED"}
+                  class="px-8 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-lg font-semibold transition-colors flex items-center justify-center"
                 >
                   <Calendar class="w-5 h-5 mr-2" />
-                  Prendre rendez-vous
+                  Continuer vers le rendez-vous
                 </button>
                 <button
                   class="px-8 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg font-semibold transition-colors flex items-center justify-center"
@@ -1261,12 +1370,6 @@
                     Appeler maintenant
                   </a>
                 </button>
-              </div>
-
-              <div class="text-center mt-6">
-                <p class="text-sm text-gray-500">
-                  * Prix indicatif, devis définitif après diagnostic sur place
-                </p>
               </div>
             </div>
           </div>
@@ -1295,7 +1398,7 @@
                   <div
                     class="w-16 h-16 {type.color} rounded-full flex items-center justify-center mx-auto mb-4"
                   >
-                    <type.icon class="w-8 h-8 text-white" />
+                    <svelte:component this={type.icon} class="w-8 h-8 text-white" />
                   </div>
                   <h3 class="text-xl font-bold text-gray-800 mb-2">
                     {type.name}
@@ -1329,7 +1432,7 @@
                   <div
                     class="w-12 h-12 {category.color} rounded-lg flex items-center justify-center mx-auto mb-4"
                   >
-                    <category.icon class="w-6 h-6 text-white" />
+                    <svelte:component this={category.icon} class="w-6 h-6 text-white" />
                   </div>
                   <h3 class="font-bold text-gray-800 mb-2">{category.name}</h3>
                   <p class="text-sm text-gray-600">{category.description}</p>
@@ -1361,7 +1464,7 @@
                   <div
                     class="w-12 h-12 {category.color} rounded-lg flex items-center justify-center mx-auto mb-4"
                   >
-                    <category.icon class="w-6 h-6 text-white" />
+                    <svelte:component this={category.icon} class="w-6 h-6 text-white" />
                   </div>
                   <h3 class="font-bold text-gray-800 mb-2">{category.name}</h3>
                   <p class="text-sm text-gray-600">{category.description}</p>
@@ -1372,7 +1475,7 @@
         </div>
       {/if}
 
-      <!-- Step 30: General Summary (for Installation and Entretien) -->
+      <!-- Step 30: General Payment (for Installation and Entretien) -->
       {#if currentStep === 30}
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
           <div
@@ -1382,7 +1485,7 @@
               class="text-3xl font-bold text-center flex items-center justify-center"
             >
               <CheckCircle class="w-8 h-8 mr-3" />
-              Récapitulatif de votre demande
+              Paiement de votre demande
             </h2>
           </div>
           <div class="p-8">
@@ -1424,12 +1527,12 @@
                 </div>
               </div>
 
-              <!-- Price Information -->
+              <!-- Payment Amount -->
               <div class="bg-green-50 rounded-lg p-6 mb-6">
                 <h3 class="text-xl font-bold text-green-800 mb-4">
                   {selectedServiceType === "entretien"
-                    ? "Prix annuel TTC"
-                    : "Prix TTC"}
+                    ? "Montant annuel TTC"
+                    : "Montant à payer"}
                 </h3>
                 <div class="text-center">
                   {#if calculatePrice()}
@@ -1438,59 +1541,42 @@
                     </div>
                     <p class="text-gray-600">
                       {selectedServiceType === "installation"
-                        ? "Prix estimé pour l'installation"
-                        : selectedServiceType === "entretien"
-                          ? "Contrat d'entretien annuel"
-                          : "Prix estimé"}
+                        ? "Montant total TTC pour l'installation"
+                        : "Montant annuel TTC pour le contrat d'entretien"}
                     </p>
                   {:else}
                     <div class="text-2xl font-bold text-orange-600 mb-2">
                       Sur devis
                     </div>
                     <p class="text-gray-600">
-                      Prix personnalisé selon vos besoins
+                      Paiement après confirmation du devis
                     </p>
                   {/if}
                 </div>
               </div>
 
-              <!-- What's included -->
-              <div
-                class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8"
-              >
-                <h4 class="font-bold text-yellow-800 mb-3">
-                  💡 Notre prestation inclut :
-                </h4>
-                <ul class="text-sm text-yellow-700 space-y-2">
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Étude technique et devis gratuit
-                  </li>
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    {selectedServiceType === "installation"
-                      ? "Installation professionnelle"
-                      : "Contrat d'entretien personnalisé"}
-                  </li>
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Garantie sur les travaux
-                  </li>
-                  <li class="flex items-center">
-                    <CheckCircle class="w-4 h-4 mr-2 text-green-600" />
-                    Suivi et conseils personnalisés
-                  </li>
-                </ul>
-              </div>
+              <!-- PayPal Button -->
+              {#if paypalLoaded && calculatePrice()}
+                <div class="bg-yellow-50 rounded-lg p-6 mb-8">
+                  <h3 class="text-xl font-bold text-yellow-800 mb-4">
+                    Payer avec PayPal
+                  </h3>
+                  <div id="paypal-button-container" class="mt-4"></div>
+                  {#if paymentError}
+                    <p class="text-red-600 mt-2">{paymentError}</p>
+                  {/if}
+                </div>
+              {/if}
 
               <!-- Action Buttons -->
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onclick={goToContactForm}
-                  class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center"
+                  disabled={!paymentId || paymentStatus !== "COMPLETED"}
+                  class="px-8 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-lg font-semibold transition-colors flex items-center justify-center"
                 >
                   <Calendar class="w-5 h-5 mr-2" />
-                  Demander un devis
+                  Demander un rendez-vous
                 </button>
                 <button
                   class="px-8 py-3 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg font-semibold transition-colors flex items-center justify-center"
@@ -1521,10 +1607,7 @@
           </div>
           <div class="p-8">
             <form
-              onsubmit={(e) => {
-                e.preventDefault();
-                submitAppointment();
-              }}
+              onsubmit={(e) => { e.preventDefault(); submitAppointment(); }}
             >
               <!-- Personal Information -->
               <div class="grid md:grid-cols-2 gap-6 mb-6">
